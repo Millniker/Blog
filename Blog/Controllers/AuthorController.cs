@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/")]
     [ApiController]
-    public class Author : Controller    
+    public class AuthorController : Controller    
     {
         [HttpGet]
-        [Route("/list")]
+        [Route("list")]
         public async Task<AuthorDto> GetList()
         {
             return null;

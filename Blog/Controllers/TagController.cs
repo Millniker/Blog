@@ -5,13 +5,12 @@ namespace Blog.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    public class PostController : Controller
+    public class TagController : Controller
     {
         [HttpGet]
-        public async Task<PostPagedListDto> GetPosts([FromQuery] Array tags, string author, Int32 min, Int32 max, string sorting, Int32 page, Int32 size)
+        public async Task<TagDto> Gettag()
         {
             return null;
         }
-       
     }
 }
