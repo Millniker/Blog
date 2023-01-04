@@ -1,4 +1,5 @@
 ﻿using Blog.Models.DTO;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
@@ -7,10 +8,17 @@ namespace Blog.Controllers
     [ApiController]
     public class UsersController : Controller
     {
+        private readonly IAuthService _authService;
+        public UsersController(IAuthService authService)
+        {
+            _authService = authService;
+        }
+
         [HttpPost]
         [Route("register")]
         public async Task Register([FromBody] UserRegisterModel userRegisterModel)
         {
+
 
         }
         [HttpPost]
