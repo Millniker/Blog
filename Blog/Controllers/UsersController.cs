@@ -16,16 +16,15 @@ namespace Blog.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task Register([FromBody] UserRegisterModel userRegisterModel)
+        public async Task<TokenResponse> Register([FromBody] UserRegisterModel userRegisterModel)
         {
-
-
+           return await _authService.RegisterUser(userRegisterModel);
         }
         [HttpPost]
         [Route("login")]
-        public async Task Login([FromBody] LoginCredential loginCredential)
+        public async Task<TokenResponse> Login([FromBody] LoginCredential loginCredential)
         {
-
+            return await _authService.LoginUser(loginCredential);
         }
         [HttpPost]
         [Route("logout")]

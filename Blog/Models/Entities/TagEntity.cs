@@ -2,5 +2,6 @@
 {
     public class TagEntity
     {
+        public Guid Id { get; set; }   
     }
 }

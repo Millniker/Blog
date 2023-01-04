@@ -6,38 +6,31 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blog.Migrations
 {
     /// <inheritdoc />
-    public partial class adduser : Migration
+    public partial class AddDataBase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CommentDto",
+                name: "Comments",
                 columns: table => new
                 {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    modifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    deleteDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    authorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    subComments = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CommentDto", x => x.id);
+                    table.PrimaryKey("PK_Comments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "TagDto",
+                name: "Tags",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    name = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TagDto", x => x.Id);
+                    table.PrimaryKey("PK_Tags", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -50,7 +43,8 @@ namespace Blog.Migrations
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Gender = table.Column<int>(type: "int", nullable: false)
+                    Gender = table.Column<int>(type: "int", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -72,22 +66,22 @@ namespace Blog.Migrations
                     hasLike = table.Column<bool>(type: "bit", nullable: false),
                     commentCount = table.Column<int>(type: "int", nullable: false),
                     tagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    commentsid = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    commentsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Post", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Post_CommentDto_commentsid",
-                        column: x => x.commentsid,
-                        principalTable: "CommentDto",
-                        principalColumn: "id",
+                        name: "FK_Post_Comments_commentsId",
+                        column: x => x.commentsId,
+                        principalTable: "Comments",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Post_TagDto_tagsId",
+                        name: "FK_Post_Tags_tagsId",
                         column: x => x.tagsId,
-                        principalTable: "TagDto",
+                        principalTable: "Tags",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -98,9 +92,9 @@ namespace Blog.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Post_commentsid",
+                name: "IX_Post_commentsId",
                 table: "Post",
-                column: "commentsid");
+                column: "commentsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_tagsId",
@@ -120,10 +114,10 @@ namespace Blog.Migrations
                 name: "Post");
 
             migrationBuilder.DropTable(
-                name: "CommentDto");
+                name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "TagDto");
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "UserEntity");

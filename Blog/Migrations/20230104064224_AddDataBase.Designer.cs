@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230103143329_adduser")]
-    partial class adduser
+    [Migration("20230104064224_AddDataBase")]
+    partial class AddDataBase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,53 +25,18 @@ namespace Blog.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("Blog.DTO.CommentDto", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("authorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("deleteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("modifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("subComments")
-                        .HasColumnType("int");
-
-                    b.HasKey("id");
-
-                    b.ToTable("CommentDto");
-                });
-
-            modelBuilder.Entity("Blog.Models.DTO.TagDto", b =>
+            modelBuilder.Entity("Blog.Models.Entities.CommentsEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("Id");
 
-                    b.ToTable("TagDto");
+                    b.ToTable("Comments");
                 });
 
-            modelBuilder.Entity("Blog.Models.Entities.Post", b =>
+            modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -94,7 +59,7 @@ namespace Blog.Migrations
                     b.Property<int>("commentCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("commentsid")
+                    b.Property<Guid>("commentsId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("hasLike")
@@ -121,11 +86,22 @@ namespace Blog.Migrations
 
                     b.HasIndex("UserEntityId");
 
-                    b.HasIndex("commentsid");
+                    b.HasIndex("commentsId");
 
                     b.HasIndex("tagsId");
 
                     b.ToTable("Post");
+                });
+
+            modelBuilder.Entity("Blog.Models.Entities.TagEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.UserEntity", b =>
@@ -151,6 +127,10 @@ namespace Blog.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("fullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -160,19 +140,19 @@ namespace Blog.Migrations
                     b.ToTable("UserEntity");
                 });
 
-            modelBuilder.Entity("Blog.Models.Entities.Post", b =>
+            modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
                 {
                     b.HasOne("Blog.Models.Entities.UserEntity", null)
                         .WithMany("CreatedPosts")
                         .HasForeignKey("UserEntityId");
 
-                    b.HasOne("Blog.DTO.CommentDto", "comments")
+                    b.HasOne("Blog.Models.Entities.CommentsEntity", "comments")
                         .WithMany()
-                        .HasForeignKey("commentsid")
+                        .HasForeignKey("commentsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Blog.Models.DTO.TagDto", "tags")
+                    b.HasOne("Blog.Models.Entities.TagEntity", "tags")
                         .WithMany()
                         .HasForeignKey("tagsId")
                         .OnDelete(DeleteBehavior.Cascade)

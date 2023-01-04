@@ -73,11 +73,11 @@ namespace Blog.Services
             return result;
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string fullname, string password)
+        private async Task<ClaimsIdentity> GetIdentity(string email, string password)
         {
             var userEntity = await _context
                 .UserEntity
-                .Where(x => x.fullName == fullname && x.Password == password)
+                .Where(x => x.Email == email && x.Password == password)
                 .FirstOrDefaultAsync();
 /*
             if (userEntity == null)
