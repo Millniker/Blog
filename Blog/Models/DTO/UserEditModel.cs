@@ -7,7 +7,7 @@ namespace Blog.Models.DTO
     {
         [Required]
         [MinLength(6)]
-        [RegularExpression(@"[a-zA-Z]+\w*@[a-zA-Z]+\.[a-zA-Z]+")]
+        [EmailAddress]
         public string email { get; set; }
         
         [Required]
@@ -17,7 +17,7 @@ namespace Blog.Models.DTO
         [Required]
         public Gender gender { get; set; }
         [Phone]
-        public string phoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
         
     }
 }

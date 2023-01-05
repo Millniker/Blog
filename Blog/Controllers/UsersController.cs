@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
-    [Route("api/profile/")]
+    [Route("api/account/")]
     [ApiController]
     public class UsersController : Controller
     {
@@ -47,9 +47,10 @@ namespace Blog.Controllers
 
         [HttpPut]
         [Route("profile")]
-        public async Task<UserEditModel> UpdateProfile()
+        [Authorize]
+        public async Task pdateProfile(UserEditModel userEditModel)
         {
-            return null;
+             await _profileService.UpdateProfile(userEditModel, User.Identity.Name);
         }
 
     }

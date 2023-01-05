@@ -24,12 +24,12 @@ namespace Blog.Services
             var userEntity = new UserEntity
             {
                 Id = Guid.NewGuid(),
-                fullName = userRegisterModel.fullName,
-                Password = userRegisterModel.password,
-                Email = userRegisterModel.email,
-                BirthDate = userRegisterModel.birthDate,
-                PhoneNumber = userRegisterModel.phoneNumber,
-                Gender = userRegisterModel.gender,
+                FullName = userRegisterModel.FullName,
+                Password = userRegisterModel.Password,
+                Email = userRegisterModel.Email,
+                BirthDate = userRegisterModel.BirthDate,
+                PhoneNumber = userRegisterModel.PhoneNumber,
+                Gender = userRegisterModel.Gender,
                 Created= DateTime.UtcNow
 
         };
@@ -80,11 +80,11 @@ namespace Blog.Services
                 .UserEntity
                 .Where(x => x.Email == email && x.Password == password)
                 .FirstOrDefaultAsync();
-/*
-            if (userEntity == null)
-            {
-                
-            }*/
+            /*
+                        if (userEntity == null)
+                        {
+
+                        }*/
 
             var claims = new List<Claim>
         {

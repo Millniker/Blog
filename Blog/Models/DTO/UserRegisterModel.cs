@@ -7,19 +7,19 @@ namespace Blog.Models.DTO
     {
         [Required]
         [MinLength(1)]
-        public string fullName { get; set; }
+        public string FullName { get; set; }
         [Required]
         [MinLength(6)]
-        public string password { get; set; }
+        public string Password { get; set; }
         [Required]
         [MinLength(6)]
         [RegularExpression(@"[a-zA-Z]+\w*@[a-zA-Z]+\.[a-zA-Z]+")]
-        public string email { get; set; }
+        public string Email { get; set; }
         [Required]
-        public DateTime birthDate { get; set; }
+        public DateTime BirthDate { get; set; }
         [Required]
-        public Gender gender { get; set; }
+        public Gender Gender { get; set; }
         [Phone]
-        public string phoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
     }
 }

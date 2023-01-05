@@ -1,6 +1,9 @@
-﻿namespace Blog.Models.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace Blog.Models.Enums
 {
-   public enum Gender
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public enum Gender
     {
         Female,
         Male

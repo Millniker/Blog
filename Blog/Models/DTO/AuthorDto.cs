@@ -7,16 +7,16 @@ namespace Blog.DTO
     {
         [Required]
         [MinLength(1)]
-        public string fullName { get; set; }
+        public string FullName { get; set; }
 
-        public DateTime birthDate { get; set; }
+        public DateTime BirthDate { get; set; }
 
         [Required]
-        public Gender gender { get; set; }
+        public Gender Gender { get; set; }
 
-        public Int32 posts { get; set; }
-        public Int32 likes { get; set; }
-        public DateTime created { get; set; }
+        public Int32 Posts { get; set; }
+        public Int32 Likes { get; set; }
+        public DateTime Created { get; set; }
 
     }
 }

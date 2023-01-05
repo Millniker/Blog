@@ -11,12 +11,12 @@ namespace Blog.Models.Entities
         public Guid Id { get; set; }
         [Required]
         [MinLength(1)]
-        public string fullName { get; set; }
+        public string FullName { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
         [Required]
         [MinLength(6)]
-        [RegularExpression(@"[a-zA-Z]+\w*@[a-zA-Z]+\.[a-zA-Z]+")]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         [MinLength(6)]
