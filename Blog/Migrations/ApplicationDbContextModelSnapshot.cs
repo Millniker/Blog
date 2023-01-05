@@ -101,6 +101,24 @@ namespace Blog.Migrations
                     b.ToTable("Tags");
                 });
 
+            modelBuilder.Entity("Blog.Models.Entities.TokenEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("ExpiredDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tokens");
+                });
+
             modelBuilder.Entity("Blog.Models.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")

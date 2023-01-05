@@ -6,7 +6,7 @@ namespace Blog.Models.DTO
     {
         [Required]
         [MinLength(1)]
-
+        [EmailAddress]
         public string email { get; set; }
         [Required]
         [MinLength(1)]

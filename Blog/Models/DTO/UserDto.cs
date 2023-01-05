@@ -8,7 +8,7 @@ namespace Blog.Models.DTO
         public Guid Id { get; set; }
         [Required]
         [MinLength(6)]
-        [RegularExpression(@"[a-zA-Z]+\w*@[a-zA-Z]+\.[a-zA-Z]+")]
+        [EmailAddress]
         public string email { get; set; }
 
         [Required]

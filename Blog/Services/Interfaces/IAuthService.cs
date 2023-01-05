@@ -6,5 +6,6 @@ namespace Blog.Services.Interfaces
     {
         public Task<TokenResponse> LoginUser(LoginCredential loginCredentials);
         public Task<TokenResponse> RegisterUser(UserRegisterModel userRegisterModel);
+        public Task<Response> LogoutUser(HttpContext httpContext);
     }
 }

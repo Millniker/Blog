@@ -1,17 +1,20 @@
 ﻿using Blog.Models.DTO;
 using Blog.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
 {
-    [Route("api/[controller]/")]
+    [Route("api/profile/")]
     [ApiController]
     public class UsersController : Controller
     {
         private readonly IAuthService _authService;
-        public UsersController(IAuthService authService)
+        private readonly IProfileService _profileService;
+        public UsersController(IAuthService authService, IProfileService profileService)
         {
             _authService = authService;
+            _profileService = profileService;   
         }
 
         [HttpPost]
@@ -28,16 +31,18 @@ namespace Blog.Controllers
         }
         [HttpPost]
         [Route("logout")]
-        public async Task Logout()
+        [Authorize]
+        public async Task<Response> Logout()
         {
-
+            return await _authService.LogoutUser(HttpContext);
         }
 
         [HttpGet]
         [Route("profile")]
+        [Authorize]
         public async Task<UserDto> Profile()
         {
-            return null;
+            return await _profileService.GetUserProfile(User.Identity.Name);
         }
 
         [HttpPut]

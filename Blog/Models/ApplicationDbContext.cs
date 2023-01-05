@@ -9,6 +9,7 @@ namespace Blog.Models
         public DbSet<PostEntity> Post { get; set; }
         public DbSet<CommentsEntity> Comments { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
+        public DbSet<TokenEntity> Tokens { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.EnsureCreated();
@@ -19,6 +20,7 @@ namespace Blog.Models
             modelBuilder.Entity<PostEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<CommentsEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<TagEntity>().HasKey(x => x.Id);
+            modelBuilder.Entity<TokenEntity>().HasKey(x => x.Id);
         }
 
     }
