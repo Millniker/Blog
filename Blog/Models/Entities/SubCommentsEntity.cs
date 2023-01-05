@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace Blog.DTO
+namespace Blog.Models.Entities
 {
-    public class CommentDto
+    public class SubCommentsEntity
     {
         public Guid id { get; set; }
         [Required]
@@ -15,9 +15,8 @@ namespace Blog.DTO
         [Required]
         public Guid authorId { get; set; }
         [Required]
-        [MinLength (1)]
+        [MinLength(1)]
         public string author { get; set; }
-        [Required]
-        public Int32 subComments { get; set; }
+       
     }
 }

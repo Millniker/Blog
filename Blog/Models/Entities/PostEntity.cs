@@ -12,30 +12,30 @@ namespace Blog.Models.Entities
 
         [Required]
         [MinLength(1)]
-        public string title { get; set; }
+        public string Title { get; set; }
         [Required]
         [MinLength(1)]
         public string Description { get; set; }
         [Required]
         public Int32 readingTime { get; set; }
-        public string image { get; set; }
+        public string Image { get; set; }
 
         [Required]
-        public Guid authorId { get; set; }
+        public Guid AuthorId { get; set; }
         [Required]
         [MinLength(1)]
-        public string author { get; set; }
+        public string Author { get; set; }
 
         [Required]
         [DefaultValue(0)]
-        public Int32 likes { get; set; }
+        public Int32 Likes { get; set; }
 
         [Required]
         [DefaultValue(false)]
-        public bool hasLike { get; set; }
+        public bool HasLike { get; set; }
         [Required, DefaultValue(0)]
-        public Int32 commentCount { get; set; }
-        public TagEntity tags { get; set; }
-        public CommentsEntity comments { get; set; } 
+        public Int32 CommentCount { get; set; }
+        public TagEntity Tags { get; set; }
+        public CommentsEntity Comments { get; set; } 
     }
 }
