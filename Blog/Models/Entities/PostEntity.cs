@@ -17,7 +17,7 @@ namespace Blog.Models.Entities
         [MinLength(1)]
         public string Description { get; set; }
         [Required]
-        public Int32 readingTime { get; set; }
+        public Int32 ReadingTime { get; set; }
         public string Image { get; set; }
 
         [Required]
@@ -33,6 +33,7 @@ namespace Blog.Models.Entities
         [Required]
         [DefaultValue(false)]
         public bool HasLike { get; set; }
+        public DateTime Created { get; set; }
         [Required, DefaultValue(0)]
         public Int32 CommentCount { get; set; }
         public TagEntity Tags { get; set; }

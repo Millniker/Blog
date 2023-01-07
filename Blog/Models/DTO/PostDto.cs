@@ -34,8 +34,9 @@ namespace Blog.DTO
         public bool hasLike { get; set; }
         [Required, DefaultValue(0)]
         public Int32 commentCount { get; set; }
-        public TagDto tags { get; set; }
-        
+        public TagDto Tags { get; set; }
+        public CommentDto Comments { get; set; }
+
 
     }
 }

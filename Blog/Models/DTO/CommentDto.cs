@@ -5,7 +5,7 @@ namespace Blog.DTO
 {
     public class CommentDto
     {
-        public Guid id { get; set; }
+        public Guid Id { get; set; }
         [Required]
         [MinLength(1)]
         public string content { get; set; }
