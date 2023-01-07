@@ -1,4 +1,6 @@
 ﻿using Blog.Models.DTO;
+using Blog.Services;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
@@ -7,10 +9,15 @@ namespace Blog.Controllers
     [ApiController]
     public class TagController : Controller
     {
-        [HttpGet]
-        public async Task<TagDto> Gettag()
+        private readonly ITagService _tagService;
+        public TagController(ITagService tagService)
         {
-            return null;
+            _tagService = tagService;
+        }
+        [HttpGet]
+        public  List<TagDto> Gettag()
+        {
+            return _tagService.GetTegs();
         }
     }
 }

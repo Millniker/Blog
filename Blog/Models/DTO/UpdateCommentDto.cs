@@ -6,6 +6,6 @@ namespace Blog.Models.DTO
     {
         [Required]
         [MinLength(1)]
-        public string contnet { get; set; }
+        public string content { get; set; }
     }
 }

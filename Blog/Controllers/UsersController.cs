@@ -48,7 +48,7 @@ namespace Blog.Controllers
         [HttpPut]
         [Route("profile")]
         [Authorize]
-        public async Task pdateProfile(UserEditModel userEditModel)
+        public async Task UpdateProfile(UserEditModel userEditModel)
         {
              await _profileService.UpdateProfile(userEditModel, User.Identity.Name);
         }

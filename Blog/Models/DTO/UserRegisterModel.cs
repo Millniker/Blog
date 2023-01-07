@@ -13,7 +13,7 @@ namespace Blog.Models.DTO
         public string Password { get; set; }
         [Required]
         [MinLength(6)]
-        [RegularExpression(@"[a-zA-Z]+\w*@[a-zA-Z]+\.[a-zA-Z]+")]
+        [EmailAddress]
         public string Email { get; set; }
         [Required]
         public DateTime BirthDate { get; set; }
