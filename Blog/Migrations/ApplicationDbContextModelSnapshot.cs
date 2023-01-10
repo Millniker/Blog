@@ -28,6 +28,9 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("author")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -50,6 +53,8 @@ namespace Blog.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PostId");
+
                     b.ToTable("Comments");
                 });
 
@@ -69,8 +74,8 @@ namespace Blog.Migrations
                     b.Property<int>("CommentCount")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("CommentsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -80,14 +85,13 @@ namespace Blog.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Likes")
                         .HasColumnType("int");
 
-                    b.Property<Guid>("TagsId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ReadingTime")
+                        .HasColumnType("int");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -96,14 +100,7 @@ namespace Blog.Migrations
                     b.Property<Guid?>("UserEntityId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("readingTime")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("CommentsId");
-
-                    b.HasIndex("TagsId");
 
                     b.HasIndex("UserEntityId");
 
@@ -212,27 +209,37 @@ namespace Blog.Migrations
                     b.ToTable("UserEntity");
                 });
 
+            modelBuilder.Entity("PostEntityTagEntity", b =>
+                {
+                    b.Property<Guid>("PostsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("TagsId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PostsId", "TagsId");
+
+                    b.HasIndex("TagsId");
+
+                    b.ToTable("PostEntityTagEntity");
+                });
+
+            modelBuilder.Entity("Blog.Models.Entities.CommentsEntity", b =>
+                {
+                    b.HasOne("Blog.Models.Entities.PostEntity", "Post")
+                        .WithMany("Comments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+                });
+
             modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
                 {
-                    b.HasOne("Blog.Models.Entities.CommentsEntity", "Comments")
-                        .WithMany()
-                        .HasForeignKey("CommentsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Blog.Models.Entities.TagEntity", "Tags")
-                        .WithMany()
-                        .HasForeignKey("TagsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Blog.Models.Entities.UserEntity", null)
                         .WithMany("CreatedPosts")
                         .HasForeignKey("UserEntityId");
-
-                    b.Navigation("Comments");
-
-                    b.Navigation("Tags");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.SubCommentsEntity", b =>
@@ -242,9 +249,29 @@ namespace Blog.Migrations
                         .HasForeignKey("CommentsEntityId");
                 });
 
+            modelBuilder.Entity("PostEntityTagEntity", b =>
+                {
+                    b.HasOne("Blog.Models.Entities.PostEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Blog.Models.Entities.TagEntity", null)
+                        .WithMany()
+                        .HasForeignKey("TagsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Blog.Models.Entities.CommentsEntity", b =>
                 {
                     b.Navigation("subCommentsEntities");
+                });
+
+            modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
+                {
+                    b.Navigation("Comments");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.UserEntity", b =>

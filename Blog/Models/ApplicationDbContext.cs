@@ -1,5 +1,6 @@
 ﻿using Blog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 
 namespace Blog.Models
 {
@@ -21,6 +22,9 @@ namespace Blog.Models
             modelBuilder.Entity<CommentsEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<TagEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<TokenEntity>().HasKey(x => x.Id);
+           
+ 
+            
         }
 
     }

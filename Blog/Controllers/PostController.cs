@@ -1,6 +1,10 @@
 ﻿using Blog.DTO;
 using Blog.Models.DTO;
+using Blog.Models.Entities;
+using Blog.Models.Enums;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Blog.Controllers
 {
@@ -8,11 +12,16 @@ namespace Blog.Controllers
     [ApiController]
     public class PostController : Controller
     {
-        [HttpGet]
-        
-        public async Task<PostPagedListDto> GetPosts([FromQuery] Array tags, string author, Int32 min, Int32 max, string sorting, Int32 page, Int32 size)
+
+        private readonly IPostService _postService;
+        public PostController(IPostService postService)
         {
-            return null;
+            _postService = postService;
+        }
+        [HttpGet]
+        public async Task<PostPagedListDto> GetPosts([FromQuery] string[]? tags, string? author=null, Int32? min=null, Int32? max=null, PostSorting? sorting = null, Int32 page=1, Int32 size=5)
+        {
+            return _postService.GetPosts(tags, author, min, max, sorting, page, size);
         }
         [HttpGet]
         [Route("{id}")]

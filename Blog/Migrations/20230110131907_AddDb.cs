@@ -6,28 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blog.Migrations
 {
     /// <inheritdoc />
-    public partial class addDataBasr : Migration
+    public partial class AddDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    modifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    deleteDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    authorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    subComments = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Tags",
                 columns: table => new
@@ -72,6 +55,81 @@ namespace Blog.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Post",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ReadingTime = table.Column<int>(type: "int", nullable: false),
+                    Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    HasLike = table.Column<bool>(type: "bit", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CommentCount = table.Column<int>(type: "int", nullable: false),
+                    UserEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Post", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Post_UserEntity_UserEntityId",
+                        column: x => x.UserEntityId,
+                        principalTable: "UserEntity",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comments",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    modifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    deleteDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    authorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    subComments = table.Column<int>(type: "int", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comments", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comments_Post_PostId",
+                        column: x => x.PostId,
+                        principalTable: "Post",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PostEntityTagEntity",
+                columns: table => new
+                {
+                    PostsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    TagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PostEntityTagEntity", x => new { x.PostsId, x.TagsId });
+                    table.ForeignKey(
+                        name: "FK_PostEntityTagEntity_Post_PostsId",
+                        column: x => x.PostsId,
+                        principalTable: "Post",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PostEntityTagEntity_Tags_TagsId",
+                        column: x => x.TagsId,
+                        principalTable: "Tags",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "SubCommentsEntity",
                 columns: table => new
                 {
@@ -93,60 +151,20 @@ namespace Blog.Migrations
                         principalColumn: "Id");
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Post",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    readingTime = table.Column<int>(type: "int", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Likes = table.Column<int>(type: "int", nullable: false),
-                    HasLike = table.Column<bool>(type: "bit", nullable: false),
-                    CommentCount = table.Column<int>(type: "int", nullable: false),
-                    TagsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    CommentsId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Post", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Post_Comments_CommentsId",
-                        column: x => x.CommentsId,
-                        principalTable: "Comments",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Post_Tags_TagsId",
-                        column: x => x.TagsId,
-                        principalTable: "Tags",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Post_UserEntity_UserEntityId",
-                        column: x => x.UserEntityId,
-                        principalTable: "UserEntity",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Post_CommentsId",
-                table: "Post",
-                column: "CommentsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Post_TagsId",
-                table: "Post",
-                column: "TagsId");
+                name: "IX_Comments_PostId",
+                table: "Comments",
+                column: "PostId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Post_UserEntityId",
                 table: "Post",
                 column: "UserEntityId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PostEntityTagEntity_TagsId",
+                table: "PostEntityTagEntity",
+                column: "TagsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SubCommentsEntity_CommentsEntityId",
@@ -158,7 +176,7 @@ namespace Blog.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Post");
+                name: "PostEntityTagEntity");
 
             migrationBuilder.DropTable(
                 name: "SubCommentsEntity");
@@ -170,10 +188,13 @@ namespace Blog.Migrations
                 name: "Tags");
 
             migrationBuilder.DropTable(
-                name: "UserEntity");
+                name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "UserEntity");
         }
     }
 }

@@ -18,7 +18,7 @@ namespace Blog.Models.Entities
         public string Description { get; set; }
         [Required]
         public Int32 ReadingTime { get; set; }
-        public string Image { get; set; }
+        public string? Image { get; set; }
 
         [Required]
         public Guid AuthorId { get; set; }
@@ -36,7 +36,7 @@ namespace Blog.Models.Entities
         public DateTime Created { get; set; }
         [Required, DefaultValue(0)]
         public Int32 CommentCount { get; set; }
-        public TagEntity Tags { get; set; }
-        public CommentsEntity Comments { get; set; } 
+        public List<CommentsEntity> Comments { get; set; }
+        public List<TagEntity> Tags { get; set; }
     }
 }

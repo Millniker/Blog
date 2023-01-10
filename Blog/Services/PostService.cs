@@ -4,6 +4,7 @@ using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Models.Enums;
 using Blog.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Blog.Services
 {
@@ -15,9 +16,22 @@ namespace Blog.Services
             _context = context;
         }
 
-        public PostPagedListDto GetPosts(IList<TagEntity> tags, string author, Int32? min, Int32? max, PostSorting? sorting, Int32 page, Int32 size)
+        public PostPagedListDto GetPosts(string[]? tags, string? author, Int32? min, Int32? max, PostSorting? sorting, Int32 page, Int32 size)
         {
             IQueryable<PostEntity> query = _context.Post;
+          
+            if (tags.Any() && tags != null)
+            {
+                foreach (var tag in tags)
+                {
+                    var tagId = new Guid(tag);
+                    query.Where(p => p.Tags
+                    .Select(k => k.Id).
+                    Contains(tagId));
+
+                }
+                
+            }
             if (min != null)
             {
                 query = query.
@@ -28,11 +42,7 @@ namespace Blog.Services
                 query = query.
                     Where(post => post.ReadingTime <= max);
             }
-            if (tags.Any())
-            {
-                query = query.
-                    Where(post => tags.Contains(post.Tags));
-            }
+            
             if (sorting != null)
             {
                 switch (sorting)
@@ -65,6 +75,7 @@ namespace Blog.Services
             }
 
             List<PostEntity> posts = query.Skip(size * (page - 1)).Take(size).ToList();
+            Console.WriteLine(posts);
             var PostList = new PostPagedListDto
             {
                 Posts = (from post in posts
@@ -78,23 +89,15 @@ namespace Blog.Services
                              authot = post.Author,
                              likes = post.Likes,
                              hasLike=post.HasLike,
+                
                              commentCount = post.CommentCount,
-                             Tags = new TagDto
-                             {
-                                 Id=post.Tags.Id,
-                                 name = post.Tags.Name
-                             },
-                             Comments = new CommentDto
-                             {
-                                 Id = post.Comments.Id,
-                                 content = post.Comments.content,
-                                 modifiedDate = post.Comments.modifiedDate,
-                                 deleteDate = post.Comments.deleteDate,
-                                 author = post.Comments.author,
-                                 authorId = post.Comments.authorId,
-                                 subComments = post.Comments.subComments
-                             }
 
+                           /*  Tags = (from tag in post.Tags 
+                                     select new TagDto
+                                     {
+                                         Id = tag.Id,
+                                         name = tag.Name
+                                     }).ToList(),*/
                          }
                 ).ToList(),
                 Pagination = new PageInfoModel
@@ -104,6 +107,9 @@ namespace Blog.Services
                     current = page
                 }
             };
+
+         
+            
             return PostList;
         }
         

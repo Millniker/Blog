@@ -9,5 +9,6 @@ namespace Blog.Models.Entities
         [MinLength(1)]
 
         public string Name { get; set; }
+        public List<PostEntity> Posts { get; set; }
     }
 }
