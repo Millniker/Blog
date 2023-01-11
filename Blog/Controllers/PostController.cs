@@ -19,7 +19,7 @@ namespace Blog.Controllers
             _postService = postService;
         }
         [HttpGet]
-        public async Task<PostPagedListDto> GetPosts([FromQuery] string[]? tags, string? author=null, Int32? min=null, Int32? max=null, PostSorting? sorting = null, Int32 page=1, Int32 size=5)
+        public async Task<PostPagedListDto> GetPosts([FromQuery] Guid[]? tags, string? author=null, Int32? min=null, Int32? max=null, PostSorting? sorting = null, Int32 page=1, Int32 size=5)
         {
             return _postService.GetPosts(tags, author, min, max, sorting, page, size);
         }

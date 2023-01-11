@@ -10,10 +10,4 @@ values('05d8b266-8e63-11ed-a1eb-0242ac120002',N'Борщ',N'тмоатмомвм
 
 delete "PostEntityTagEntity";
 insert into "PostEntityTagEntity" ("PostsId", "TagsId")
-values('05d8b266-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c'),
-('05d8b266-8e63-11ed-a1eb-0242ac120002', 'b4e44ca7-7b96-4d12-aed3-08d9b9f3d27c'),
-('05d8b266-8e63-11ed-a1eb-0242ac120002', '5fb99899-1833-4e9e-aed7-08d9b9f3d27c'),
-('05d8b266-8e63-11ed-a1eb-0242ac120002', '279e470a-11dc-46e2-aeda-08d9b9f3d27c'),
-('05d8ba90-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c'),
-('05d8bbda-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c'),
-('05d8bcfc-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c');
+values('05d8b266-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c');

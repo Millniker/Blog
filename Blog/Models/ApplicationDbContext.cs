@@ -22,9 +22,11 @@ namespace Blog.Models
             modelBuilder.Entity<CommentsEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<TagEntity>().HasKey(x => x.Id);
             modelBuilder.Entity<TokenEntity>().HasKey(x => x.Id);
-           
- 
-            
+
+            modelBuilder.Entity<PostEntity>()
+                .HasMany(t => t.Tags)
+                .WithMany(p => p.Posts);
+
         }
 
     }
