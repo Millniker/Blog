@@ -67,7 +67,7 @@ namespace Blog.Services
             if (author != null)
             {
                 query = query.
-                    Where(post => post.Author.Contains(author));
+                    Where(a => a.Author.Contains(author));
             }
             int totalPostsCount = query.Count();
             int pageCount = (int)Math.Ceiling(totalPostsCount / (decimal)size);
