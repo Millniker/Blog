@@ -8,18 +8,17 @@ namespace Blog.Models.Entities
         public Guid Id { get; set; }
         [Required]
         [MinLength(1)]
-        public string content { get; set; }
-
-        public DateTime modifiedDate { get; set; }
-        public DateTime deleteDate { get; set; }
+        public string Content { get; set; }
+        public DateTime? ModifiedDate { get; set; }
+        public DateTime? DeleteDate { get; set; }
         [Required]
-        public Guid authorId { get; set; }
+        public Guid AuthorId { get; set; }
         [Required]
         [MinLength(1)]
-        public string author { get; set; }
+        public string Author { get; set; }
         [Required]
-        public Int32 subComments { get; set; }
-        public List<SubCommentsEntity> subCommentsEntities { get; set; }
+        public Int32 SubComments { get; set; }
+        public Guid? ParentId {get; set; }
         [ForeignKey("Post")]
         public Guid PostId { get; set; }
 

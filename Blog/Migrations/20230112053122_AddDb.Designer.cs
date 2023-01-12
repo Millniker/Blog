@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blog.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230111064150_addDb")]
-    partial class addDb
+    [Migration("20230112053122_AddDb")]
+    partial class AddDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,27 +31,27 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("AuthorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("DeleteDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("ModifiedDate")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("authorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("deleteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("modifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("subComments")
+                    b.Property<int>("SubComments")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -140,7 +140,7 @@ namespace Blog.Migrations
 
                     b.HasIndex("CommentsEntityId");
 
-                    b.ToTable("SubCommentsEntity");
+                    b.ToTable("SubComments");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.TagEntity", b =>
@@ -212,6 +212,23 @@ namespace Blog.Migrations
                     b.ToTable("UserEntity");
                 });
 
+            modelBuilder.Entity("Blog.Models.Entities.UsersLikedPost", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("UsersLikedPosts");
+                });
+
             modelBuilder.Entity("PostEntityTagEntity", b =>
                 {
                     b.Property<Guid>("PostsId")
@@ -248,7 +265,7 @@ namespace Blog.Migrations
             modelBuilder.Entity("Blog.Models.Entities.SubCommentsEntity", b =>
                 {
                     b.HasOne("Blog.Models.Entities.CommentsEntity", null)
-                        .WithMany("subCommentsEntities")
+                        .WithMany("SubCommentsEntities")
                         .HasForeignKey("CommentsEntityId");
                 });
 
@@ -269,7 +286,7 @@ namespace Blog.Migrations
 
             modelBuilder.Entity("Blog.Models.Entities.CommentsEntity", b =>
                 {
-                    b.Navigation("subCommentsEntities");
+                    b.Navigation("SubCommentsEntities");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>

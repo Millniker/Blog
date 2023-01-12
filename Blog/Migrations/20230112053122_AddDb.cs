@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blog.Migrations
 {
     /// <inheritdoc />
-    public partial class addDb : Migration
+    public partial class AddDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,6 +55,19 @@ namespace Blog.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UsersLikedPosts",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UsersLikedPosts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Post",
                 columns: table => new
                 {
@@ -86,12 +99,12 @@ namespace Blog.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    modifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    deleteDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    authorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    subComments = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    DeleteDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SubComments = table.Column<int>(type: "int", nullable: false),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -130,7 +143,7 @@ namespace Blog.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "SubCommentsEntity",
+                name: "SubComments",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -143,9 +156,9 @@ namespace Blog.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SubCommentsEntity", x => x.id);
+                    table.PrimaryKey("PK_SubComments", x => x.id);
                     table.ForeignKey(
-                        name: "FK_SubCommentsEntity_Comments_CommentsEntityId",
+                        name: "FK_SubComments_Comments_CommentsEntityId",
                         column: x => x.CommentsEntityId,
                         principalTable: "Comments",
                         principalColumn: "Id");
@@ -167,8 +180,8 @@ namespace Blog.Migrations
                 column: "TagsId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_SubCommentsEntity_CommentsEntityId",
-                table: "SubCommentsEntity",
+                name: "IX_SubComments_CommentsEntityId",
+                table: "SubComments",
                 column: "CommentsEntityId");
         }
 
@@ -179,10 +192,13 @@ namespace Blog.Migrations
                 name: "PostEntityTagEntity");
 
             migrationBuilder.DropTable(
-                name: "SubCommentsEntity");
+                name: "SubComments");
 
             migrationBuilder.DropTable(
                 name: "Tokens");
+
+            migrationBuilder.DropTable(
+                name: "UsersLikedPosts");
 
             migrationBuilder.DropTable(
                 name: "Tags");

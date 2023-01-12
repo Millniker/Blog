@@ -5,9 +5,6 @@ using Blog.Models.Entities;
 using Blog.Models.Enums;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
 namespace Blog.Services
 {
 
@@ -20,7 +17,7 @@ namespace Blog.Services
 
         }
 
-        public PostPagedListDto GetPosts(Guid[]? tags, string? author, Int32? min, Int32? max, PostSorting? sorting, Int32 page, Int32 size)
+        public PostPagedListDto GetPosts(Guid[]? tags, string? author, Int32? min, Int32? max, PostSorting? sorting, Int32 page, Int32 size, string userId)
         {
             IQueryable<PostEntity> query = _context.Post.Include(one => one.Tags);
             if (tags.Any() && tags != null)
@@ -90,7 +87,7 @@ namespace Blog.Services
                              authotId = post.AuthorId,
                              authot = post.Author,
                              likes = post.Likes,
-                             hasLike = post.HasLike,
+                             hasLike = HasLike(userId, post.Id),
 
                              commentCount = post.CommentCount,
                              Tags = (from tag in post.Tags
@@ -110,10 +107,22 @@ namespace Blog.Services
             };
             return PostList;
         }
+        public bool HasLike(string user, Guid post)
+        {
+            var usersLikedPost = _context.UsersLikedPosts.Where(x => x.UserId.ToString() == user && x.PostId == post).FirstOrDefault();
+            if (usersLikedPost != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
         public PostFullDto GetConcertPost (Guid id)
         {
-            PostEntity post = _context.Post
-                .Include(c => c.Comments)
+
+            var post = _context.Post
                 .Include(t => t.Tags)
                 .Where(p => p.Id == id)
                 .FirstOrDefault();
@@ -121,6 +130,7 @@ namespace Blog.Services
             {
 
             }
+            List<CommentDto> comments = GetCommentsList(id);
             return new PostFullDto
             {
 
@@ -142,18 +152,110 @@ namespace Blog.Services
                             name = tag.Name
 
                         }).ToList(),
-                comments=(from com in post.Comments
-                          select new CommentDto
-                          {Id = com.Id,
-                          content = com.content,
-                          modifiedDate =com.modifiedDate,
-                          deleteDate =com.deleteDate,
-                          author = com.author,
-                          authorId = com.authorId,
-                          subComments = com.subComments,
-                          }).ToList(),
+                comments = comments,
+               
                 
             };
+        }
+        public List<CommentDto> GetCommentsList (Guid postId)
+        {
+            List<CommentsEntity> comments = _context.Comments.Where(c => c.PostId == postId).ToList();
+            List<CommentDto> commentDtos = new();
+            foreach (var com in comments)
+            {
+               /* List<SubCommentsEntity> subComments = _context.SubComments.Where(s => s.id == com.Id).ToList();*/
+                commentDtos.Add(new CommentDto
+                {
+                    Id = com.Id,
+                    modifiedDate = com.ModifiedDate,
+                    deleteDate = com.DeleteDate,
+                    author = com.Author,
+                    authorId = com.AuthorId,
+                    content = com.Content,
+                    subComments = com.SubComments,
+                    /*comments = (from subComment in subComments
+                                select new CommentDto
+                                {
+                                    Id = com.Id,
+                                    modifiedDate = com.modifiedDate,
+                                    deleteDate = com.deleteDate,
+                                    author = com.author,
+                                    authorId = com.authorId,
+                                    content = com.content
+                                }).ToList(),*/
+
+                });
+
+            }
+            return commentDtos;
+
+        }
+        public Response SetLike(Guid postId, string userId)
+        {
+            var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
+            if(post == null)
+            {
+
+            }
+            var userLikedPost = HasLike(userId, postId);
+            if (!userLikedPost)
+            {
+                post.Likes += 1;
+                UsersLikedPost usersLiked = new()
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = new Guid(userId),
+                    PostId = postId,
+                };
+                _context.Post.Entry(post).State = EntityState.Modified;
+                _context.UsersLikedPosts.AddAsync(usersLiked);
+                _context.SaveChangesAsync();
+               
+            }
+            else
+            {
+                //trow
+            }
+            Response result = new()
+            {
+                status = "200",
+                message = "Success"
+
+            };
+
+
+            return result;
+        }
+        public Response DeleteLike(Guid postId, string userId)
+        {
+            var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
+            if (post == null)
+            {
+
+            }
+            var userLikedPost = HasLike(userId, postId);
+            if (userLikedPost)
+            {
+                post.Likes -= 1;
+                UsersLikedPost usersLiked = _context.UsersLikedPosts.Where(x => x.UserId.ToString() == userId && x.PostId == postId).FirstOrDefault();
+                _context.Attach(post).State = EntityState.Modified;
+                _context.UsersLikedPosts.Remove(usersLiked);
+                _context.SaveChangesAsync();
+
+            }
+            else
+            {
+                //trow
+            }
+            Response result = new()
+            {
+                status = "200",
+                message = "Success"
+
+            };
+
+
+            return result;
         }
     }
 }

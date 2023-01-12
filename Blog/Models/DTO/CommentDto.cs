@@ -10,8 +10,8 @@ namespace Blog.DTO
         [MinLength(1)]
         public string content { get; set; }
 
-        public DateTime modifiedDate { get; set; }
-        public DateTime deleteDate { get; set; }
+        public DateTime? modifiedDate { get; set; }
+        public DateTime? deleteDate { get; set; }
         [Required]
         public Guid authorId { get; set; }
         [Required]
@@ -19,5 +19,6 @@ namespace Blog.DTO
         public string author { get; set; }
         [Required]
         public Int32 subComments { get; set; }
+        public List<CommentDto> comments { get; set; }
     }
 }

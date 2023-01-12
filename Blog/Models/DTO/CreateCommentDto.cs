@@ -6,7 +6,7 @@ namespace Blog.DTO
     {
         [Required]
         [MinLength(1)]
-        public string content { get; set; }
-        public Guid parentId { get; set; }
+        public string Content { get; set; }
+        public Guid? ParentId { get; set; }
     }
 }
