@@ -2,6 +2,7 @@
 using Blog.Models.DTO;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.Resources;
 
 namespace Blog.Models.Entities
 {
@@ -37,6 +38,10 @@ namespace Blog.Models.Entities
         [Required, DefaultValue(0)]
         public Int32 CommentCount { get; set; }
         public List<CommentsEntity> Comments { get; set; }
+        public PostEntity()
+        {
+            Comments = new List<CommentsEntity>();
+        }
         public List<TagEntity> Tags { get; set; }
     }
 }

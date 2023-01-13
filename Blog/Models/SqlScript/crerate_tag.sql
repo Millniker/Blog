@@ -1,4 +1,8 @@
 ﻿delete from Tags;
+delete "PostEntityTagEntity";
+delete "Post";
+delete UserEntity;
+delete "Comments";
 insert into "Tags" ("Id", "Name")
 values ('3b781828-f329-4785-aecd-08d9b9f3d27c', '18+'),
        ('b4e44ca7-7b96-4d12-aed3-08d9b9f3d27c', N'жесть'),
@@ -17,7 +21,7 @@ values ('3b781828-f329-4785-aecd-08d9b9f3d27c', '18+'),
        ('de11123e-3908-47eb-aed1-08d9b9f3d27c', N'здравствуй'),
        ('c2125424-47d4-4a19-aed0-08d9b9f3d27c', N'небо'),
        ('cb961ace-1005-4077-aee4-08d9b9f3d27c', N'в');
-delete UserEntity;
+
 insert into UserEntity ("Id","FullName","BirthDate", "Email", "Password","Created","Gender","PhoneNumber")      
 values('05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','2023-01-07T08:37:56.655Z','o@gmail.com','1234567890','2023-01-07T08:37:56.655Z','1','7(876)722-48-65'),
 ('05d8b4f0-8e63-11ed-a1eb-0242ac120002',N'Валерия','2023-01-07T08:37:56.655Z','q@gmail.com','1234567890','2023-01-07T08:37:56.655Z','0','7(876)622-68-65'),
@@ -27,7 +31,7 @@ values('05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','2023-01-07T08
 ('05d8bbda-8e63-11ed-a1eb-0242ac120002',N'Герман','2023-01-07T08:37:56.655Z','t@gmail.com','1234567890','2023-01-07T08:37:56.655Z','1','7(876)622-40-65'),
 ('05d8bcfc-8e63-11ed-a1eb-0242ac120002',N'Диана','2023-01-07T08:37:56.655Z','y@gmail.com','1234567890','2023-01-07T08:37:56.655Z','0','7(876)632-48-65');
 
-delete "Post";
+
 insert into "Post" ("Id","Title","Description", "readingTime", "Image","AuthorId","Author","Likes","HasLike","Created","CommentCount","UserEntityId")      
 values('05d8b266-8e63-11ed-a1eb-0242ac120002',N'Борщ',N'тмоатмомвмыв','1',NULL,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Кто-то7','5','false','2023-01-06T08:37:56.655Z','0','05d8b266-8e63-11ed-a1eb-0242ac120002'),
 ('05d8b4f0-8e63-11ed-a1eb-0242ac120002',N'Кино',N'вмывмывивпивма','2',NULL,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Кто-то','10','true','2023-01-05T08:37:56.655Z','0','05d8b266-8e63-11ed-a1eb-0242ac120002'),
@@ -37,7 +41,7 @@ values('05d8b266-8e63-11ed-a1eb-0242ac120002',N'Борщ',N'тмоатмомвм
 ('05d8bbda-8e63-11ed-a1eb-0242ac120002',N'Лол',N'ыивпыиыпаирпыаим','5',NULL,'05d8bbda-8e63-11ed-a1eb-0242ac120002',N'Кто-то2','8','false','2023-01-01T08:37:56.655Z','0','05d8bbda-8e63-11ed-a1eb-0242ac120002'),
 ('05d8bcfc-8e63-11ed-a1eb-0242ac120002',N'Чебурек',N'иыиыпиыиви','6',NULL,'05d8bbda-8e63-11ed-a1eb-0242ac120002',N'Кто-то1','3','true','2023-01-10T08:37:56.655Z','0','05d8bbda-8e63-11ed-a1eb-0242ac120002');
 
-delete "PostEntityTagEntity";
+
 insert into "PostEntityTagEntity" ("PostsId", "TagsId")
 values('05d8b266-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3d27c'),
 ('05d8b266-8e63-11ed-a1eb-0242ac120002', 'b4e44ca7-7b96-4d12-aed3-08d9b9f3d27c'),
@@ -54,12 +58,15 @@ values('05d8b266-8e63-11ed-a1eb-0242ac120002', '3b781828-f329-4785-aecd-08d9b9f3
 ('05d8bbda-8e63-11ed-a1eb-0242ac120002','cb961ace-1005-4077-aee4-08d9b9f3d27c'),
 ('05d8bcfc-8e63-11ed-a1eb-0242ac120002','cb961ace-1005-4077-aee4-08d9b9f3d27c');
 
-delete "Comments";
-insert into "Comments" ("Id", "content", "modifiedDate","deleteDate","authorId", "author", "subComments","PostId")
-values('33a746c8-9235-11ed-a1eb-0242ac120002',N'Крутяг',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002'),
-('33a74948-9235-11ed-a1eb-0242ac120002',N'Кул',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002'),
-('33a74a60-9235-11ed-a1eb-0242ac120002',N'Кринж',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b8ec-8e63-11ed-a1eb-0242ac120002'),
-('33a74e8e-9235-11ed-a1eb-0242ac120002',N'База',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8bcfc-8e63-11ed-a1eb-0242ac120002');
+
+insert into "Comments" ("Id", "content", "modifiedDate","deleteDate","authorId", "author", "subComments","PostId","ParentId")
+values('33a746c8-9235-11ed-a1eb-0242ac120002',N'Крутяг',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002',NULL),
+('33a74948-9235-11ed-a1eb-0242ac120002',N'Кул',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002',NULL),
+('33a74a60-9235-11ed-a1eb-0242ac120002',N'Кринж',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002',NULL),
+('33a74e8e-9235-11ed-a1eb-0242ac120002',N'База',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002','33a74a60-9235-11ed-a1eb-0242ac120002'),
+('840f3e58-9268-11ed-a1eb-0242ac120002',N'Не база',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002','33a74a60-9235-11ed-a1eb-0242ac120002'),
+('840f4100-9268-11ed-a1eb-0242ac120002',N'Нет база',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002','840f3e58-9268-11ed-a1eb-0242ac120002'),
+('840f4240-9268-11ed-a1eb-0242ac120002',N'Сам кринж',Null,Null,'05d8b266-8e63-11ed-a1eb-0242ac120002',N'Вячеслав','0','05d8b266-8e63-11ed-a1eb-0242ac120002','33a746c8-9235-11ed-a1eb-0242ac120002');
 
 
        

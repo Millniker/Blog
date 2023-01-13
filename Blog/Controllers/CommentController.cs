@@ -1,5 +1,6 @@
 ﻿using Blog.DTO;
 using Blog.Models.DTO;
+using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Blog.Controllers
@@ -8,18 +9,23 @@ namespace Blog.Controllers
     [ApiController]
     public class CommentController : Controller
     {
+        private readonly ICommentService _commentService;
+        public CommentController(ICommentService commentService)
+        {
+            _commentService = commentService;
+        }
         [HttpGet]
         [Route("{id}/tree")]
-        public async Task<CommentDto> GetComments(Guid id)
+        public ActionResult<List<CommentDto>> GetComments(Guid id)
         {
-            return null;
-
+            return _commentService.GetComments(id);
         }
         [HttpPost]
         [Route("{id}/comment")]
-        public async Task AddComment(Guid id,[FromBody] CreateCommentDto createCommentDto)
+        public IActionResult AddComment(Guid id,[FromBody] CreateCommentDto createCommentDto)
         {
-            
+             _commentService.AddComment(id, createCommentDto,User.Identity.Name);
+            return Ok();
         }
         [HttpPut]
         [Route("{id}")]

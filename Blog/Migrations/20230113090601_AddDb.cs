@@ -105,6 +105,7 @@ namespace Blog.Migrations
                     AuthorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Author = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     SubComments = table.Column<int>(type: "int", nullable: false),
+                    ParentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PostId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -142,28 +143,6 @@ namespace Blog.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "SubComments",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    content = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    modifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    deleteDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    authorId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    author = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CommentsEntityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SubComments", x => x.id);
-                    table.ForeignKey(
-                        name: "FK_SubComments_Comments_CommentsEntityId",
-                        column: x => x.CommentsEntityId,
-                        principalTable: "Comments",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_PostId",
                 table: "Comments",
@@ -178,21 +157,16 @@ namespace Blog.Migrations
                 name: "IX_PostEntityTagEntity_TagsId",
                 table: "PostEntityTagEntity",
                 column: "TagsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SubComments_CommentsEntityId",
-                table: "SubComments",
-                column: "CommentsEntityId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PostEntityTagEntity");
+                name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "SubComments");
+                name: "PostEntityTagEntity");
 
             migrationBuilder.DropTable(
                 name: "Tokens");
@@ -201,13 +175,10 @@ namespace Blog.Migrations
                 name: "UsersLikedPosts");
 
             migrationBuilder.DropTable(
-                name: "Tags");
-
-            migrationBuilder.DropTable(
-                name: "Comments");
-
-            migrationBuilder.DropTable(
                 name: "Post");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "UserEntity");

@@ -45,6 +45,9 @@ namespace Blog.Migrations
                     b.Property<DateTime?>("ModifiedDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<Guid?>("ParentId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<Guid>("PostId")
                         .HasColumnType("uniqueidentifier");
 
@@ -105,39 +108,6 @@ namespace Blog.Migrations
                     b.HasIndex("UserEntityId");
 
                     b.ToTable("Post");
-                });
-
-            modelBuilder.Entity("Blog.Models.Entities.SubCommentsEntity", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("CommentsEntityId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("author")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<Guid>("authorId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("content")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("deleteDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("modifiedDate")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("CommentsEntityId");
-
-                    b.ToTable("SubComments");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.TagEntity", b =>
@@ -259,13 +229,6 @@ namespace Blog.Migrations
                         .HasForeignKey("UserEntityId");
                 });
 
-            modelBuilder.Entity("Blog.Models.Entities.SubCommentsEntity", b =>
-                {
-                    b.HasOne("Blog.Models.Entities.CommentsEntity", null)
-                        .WithMany("SubCommentsEntities")
-                        .HasForeignKey("CommentsEntityId");
-                });
-
             modelBuilder.Entity("PostEntityTagEntity", b =>
                 {
                     b.HasOne("Blog.Models.Entities.PostEntity", null)
@@ -279,11 +242,6 @@ namespace Blog.Migrations
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Blog.Models.Entities.CommentsEntity", b =>
-                {
-                    b.Navigation("SubCommentsEntities");
                 });
 
             modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
