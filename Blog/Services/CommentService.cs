@@ -3,7 +3,6 @@ using Blog.Models;
 using Blog.Models.Entities;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 using System.Data;
 
 namespace Blog.Services
@@ -80,6 +79,49 @@ namespace Blog.Services
             _context.Post.Entry(postEntity).State = EntityState.Modified;
             _context.SaveChangesAsync();
 
+        }
+        public void EditComment(Guid commentId, string content )
+        {
+            var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
+            if (comment == null)
+            {
+
+            }
+            if (comment.DeleteDate != null)
+            {
+
+            }
+
+            comment.Content = content;
+            comment.ModifiedDate = DateTime.Now;
+            _context.Comments.Entry(comment).State = EntityState.Modified;
+            _context.SaveChangesAsync();
+
+           
+        }
+        public void DeleteComment(Guid commentId)
+        {
+            var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
+            if (comment == null)
+            {
+
+            }
+            var subComments = _context.Comments.Where(s => s.ParentId == commentId);
+            if (subComments != null)
+            {
+                comment.DeleteDate = DateTime.Now;
+                comment.ModifiedDate = DateTime.Now;
+                comment.Content = "";
+                _context.Comments.Entry(comment).State = EntityState.Modified;
+            }
+            else
+            {
+                _context.Comments.Remove(comment);
+            }
+            _context.SaveChangesAsync();
+
+
+            
         }
 
     }
