@@ -39,6 +39,9 @@ namespace Blog.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("CreatedTime")
+                        .HasColumnType("datetime2");
+
                     b.Property<DateTime?>("DeleteDate")
                         .HasColumnType("datetime2");
 
@@ -100,12 +103,7 @@ namespace Blog.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("UserEntityId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("UserEntityId");
 
                     b.ToTable("Post");
                 });
@@ -155,6 +153,9 @@ namespace Blog.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("CreatedPosts")
+                        .HasColumnType("int");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -164,6 +165,9 @@ namespace Blog.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Gender")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Likes")
                         .HasColumnType("int");
 
                     b.Property<string>("Password")
@@ -222,13 +226,6 @@ namespace Blog.Migrations
                     b.Navigation("Post");
                 });
 
-            modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
-                {
-                    b.HasOne("Blog.Models.Entities.UserEntity", null)
-                        .WithMany("CreatedPosts")
-                        .HasForeignKey("UserEntityId");
-                });
-
             modelBuilder.Entity("PostEntityTagEntity", b =>
                 {
                     b.HasOne("Blog.Models.Entities.PostEntity", null)
@@ -247,11 +244,6 @@ namespace Blog.Migrations
             modelBuilder.Entity("Blog.Models.Entities.PostEntity", b =>
                 {
                     b.Navigation("Comments");
-                });
-
-            modelBuilder.Entity("Blog.Models.Entities.UserEntity", b =>
-                {
-                    b.Navigation("CreatedPosts");
                 });
 #pragma warning restore 612, 618
         }

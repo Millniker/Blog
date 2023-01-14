@@ -17,6 +17,7 @@ namespace Blog.Models.Entities
         [MinLength(1)]
         public string Author { get; set; }
         [Required]
+        public DateTime CreatedTime { get; set; }
         public Int32 SubComments { get; set; }
         public Guid? ParentId {get; set; }
         [ForeignKey("Post")]

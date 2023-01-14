@@ -1,4 +1,5 @@
 ﻿using Blog.DTO;
+using Blog.Models.DTO;
 
 namespace Blog.Services.Interfaces
 {
@@ -6,6 +7,10 @@ namespace Blog.Services.Interfaces
     {
         public List<CommentDto> GetComments(Guid commentId);
         public void AddComment(Guid postId, CreateCommentDto createComment, string userId);
+        public void DeleteComment(Guid commentId);
+        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto);
+
+        
 
     }
 }

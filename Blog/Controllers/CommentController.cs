@@ -29,15 +29,17 @@ namespace Blog.Controllers
         }
         [HttpPut]
         [Route("{id}")]
-        public async Task UpdateComment(Guid id, [FromBody] UpdateCommentDto updateCommentDto)
+        public IActionResult UpdateComment(Guid id, [FromBody] UpdateCommentDto updateCommentDto)
         {
-
+            _commentService.EditComment(id, updateCommentDto);
+            return Ok();
         }
         [HttpDelete]
         [Route("{id}")]
-        public async Task DeleteComment(Guid id)
+        public IActionResult DeleteComment(Guid id)
         {
-
+            _commentService.DeleteComment(id);
+            return Ok();
         }
 
     }

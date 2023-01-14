@@ -1,8 +1,10 @@
 ﻿using Blog.DTO;
 using Blog.Models;
+using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Data;
 
 namespace Blog.Services
@@ -17,7 +19,7 @@ namespace Blog.Services
         }
         public List<CommentDto> GetComments(Guid commentId)
         {
-            IQueryable<CommentsEntity> commentsEntities =_context.Comments.Where(x => x.ParentId == commentId);
+            IQueryable<CommentsEntity> commentsEntities =_context.Comments.Where(x => x.ParentId == commentId).OrderBy(c =>c.CreatedTime);
             var comment = _context.Comments.Where(x=> x.Id == commentId);
             
             if (comment == null)
@@ -70,7 +72,8 @@ namespace Blog.Services
                 Author = userEntity.FullName,
                 SubComments = 0,
                 ParentId = commentDto.ParentId,
-                Post = postEntity
+                Post = postEntity,
+                CreatedTime = DateTime.Now
             };
             postEntity.Comments.Add(comment);
             postEntity.CommentCount += 1;
@@ -80,7 +83,7 @@ namespace Blog.Services
             _context.SaveChangesAsync();
 
         }
-        public void EditComment(Guid commentId, string content )
+        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto)
         {
             var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
             if (comment == null)
@@ -89,12 +92,11 @@ namespace Blog.Services
             }
             if (comment.DeleteDate != null)
             {
-
+                //trow 
             }
 
-            comment.Content = content;
+            comment.Content = updateCommentDto.content;
             comment.ModifiedDate = DateTime.Now;
-            _context.Comments.Entry(comment).State = EntityState.Modified;
             _context.SaveChangesAsync();
 
            
@@ -106,13 +108,16 @@ namespace Blog.Services
             {
 
             }
-            var subComments = _context.Comments.Where(s => s.ParentId == commentId);
-            if (subComments != null)
+            if (comment.ParentId != null)
+            {
+                var parentComment = _context.Comments.Where(s => s.Id == comment.ParentId).FirstOrDefault();
+                parentComment.SubComments -= 1;
+            }
+            if (comment.SubComments!=0)
             {
                 comment.DeleteDate = DateTime.Now;
                 comment.ModifiedDate = DateTime.Now;
                 comment.Content = "";
-                _context.Comments.Entry(comment).State = EntityState.Modified;
             }
             else
             {

@@ -159,83 +159,36 @@ namespace Blog.Services
         }
         public List<CommentDto> GetCommentsList (Guid postId)
         {
-            List<CommentsEntity> comments = _context.Comments.Where(c => c.PostId == postId).ToList();
+            List<CommentsEntity> comments = _context.Comments.Where(c => c.PostId == postId).OrderBy(c => c.CreatedTime).ToList();
             List<CommentDto> commentDtos = new();
             foreach (var com in comments)
             {
-               /* List<SubCommentsEntity> subComments = _context.SubComments.Where(s => s.id == com.Id).ToList();*/
-                commentDtos.Add(new CommentDto
+                if (com.ParentId == null)
                 {
-                    Id = com.Id,
-                    modifiedDate = com.ModifiedDate,
-                    deleteDate = com.DeleteDate,
-                    author = com.Author,
-                    authorId = com.AuthorId,
-                    content = com.Content,
-                    subComments = com.SubComments,
-                    /*comments = (from subComment in subComments
-                                select new CommentDto
-                                {
-                                    Id = com.Id,
-                                    modifiedDate = com.modifiedDate,
-                                    deleteDate = com.deleteDate,
-                                    author = com.author,
-                                    authorId = com.authorId,
-                                    content = com.content
-                                }).ToList(),*/
-
-                });
-                if (GetSubCommentsList(com.Id) != null)
-                {
-                    var subComments = GetSubCommentsList(com.Id);
-                    foreach(var subComment in subComments)
+                    commentDtos.Add(new CommentDto
                     {
-                        commentDtos.Add(subComment);
-                    }
+                        Id = com.Id,
+                        modifiedDate = com.ModifiedDate,
+                        deleteDate = com.DeleteDate,
+                        author = com.Author,
+                        authorId = com.AuthorId,
+                        content = com.Content,
+                        subComments = com.SubComments
+                    });
+
                 }
-                //Сюда добавить саб комменты 
-                //Комменты для сабкоментов идут после всех основных сабкоментов 
-
             }
             return commentDtos;
 
         }
-        public List<CommentDto> GetSubCommentsList(Guid commentId)
-        {
-            List<CommentsEntity> comments = _context.Comments.Where(c => c.ParentId == commentId).ToList();
-            List<CommentDto> commentDtos = new();
-            foreach (var com in comments)
-            {
-                /* List<SubCommentsEntity> subComments = _context.SubComments.Where(s => s.id == com.Id).ToList();*/
-                commentDtos.Add(new CommentDto
-                {
-                    Id = com.Id,
-                    modifiedDate = com.ModifiedDate,
-                    deleteDate = com.DeleteDate,
-                    author = com.Author,
-                    authorId = com.AuthorId,
-                    content = com.Content,
-                    subComments = com.SubComments,
-                    /*comments = (from subComment in subComments
-                                select new CommentDto
-                                {
-                                    Id = com.Id,
-                                    modifiedDate = com.modifiedDate,
-                                    deleteDate = com.deleteDate,
-                                    author = com.author,
-                                    authorId = com.authorId,
-                                    content = com.content
-                                }).ToList(),*/
-
-                });
-               
-            }
-            return commentDtos;
-        }
+       
         public Response SetLike(Guid postId, string userId)
         {
+            
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
-            if(post == null)
+            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
+            author.Likes += 1;
+            if (post == null)
             {
 
             }
@@ -271,6 +224,8 @@ namespace Blog.Services
         public Response DeleteLike(Guid postId, string userId)
         {
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
+            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
+            author.Likes -= 1;
             if (post == null)
             {
 

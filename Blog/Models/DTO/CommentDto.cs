@@ -19,6 +19,5 @@ namespace Blog.DTO
         public string author { get; set; }
         [Required]
         public Int32 subComments { get; set; }
-        public List<CommentDto> comments { get; set; }
     }
 }

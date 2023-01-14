@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Hosting;
 using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace Blog.Models.Entities
@@ -26,6 +27,8 @@ namespace Blog.Models.Entities
         public Gender Gender { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        public List<PostEntity> CreatedPosts { get; set; }
+        [DefaultValue(0)]
+        public Int32 Likes { get; set; }
+        public Int32 CreatedPosts { get; set; }
     }
 }
