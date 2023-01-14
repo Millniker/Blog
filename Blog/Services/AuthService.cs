@@ -1,10 +1,12 @@
-﻿using Blog.Models;
+﻿using Azure.Core;
+using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Services.Interfaces;
 using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Net.Http.Headers;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -101,10 +103,8 @@ namespace Blog.Services
 
             return claimsIdentity;
         }
-        public async Task<Response> LogoutUser(HttpContext httpContext)
+        public void  LogoutUser(string token)
         {
-            var token = GetToken(httpContext.Request.Headers);
-
             var handler = new JwtSecurityTokenHandler();
             var expiredDate = handler.ReadJwtToken(token).ValidTo;
 
@@ -115,39 +115,8 @@ namespace Blog.Services
                 ExpiredDate = expiredDate
             };
 
-            await _context.Tokens.AddAsync(tokenEntity);
-            await _context.SaveChangesAsync();
-
-
-            var result = new Response()
-            {
-                status = "Logged out",
-                message = token
-            };
-            return result;
-        }
-        private static string GetToken(IHeaderDictionary headerDictionary)
-        {
-            var requestHeaders = new Dictionary<string, string>();
-
-            foreach (var header in headerDictionary)
-            {
-                requestHeaders.Add(header.Key, header.Value);
-            }
-
-            var authorizationString = requestHeaders["Authorization"];
-
-
-            const string pattern = @"\S+\.\S+\.\S+";
-            var regex = new Regex(pattern);
-            var matches = regex.Matches(authorizationString);
-            /*
-                        if (matches.Count <= 0)
-                        {
-            throw new CanNotGetTokenException("Can not get the token from headers");
-                        }*/
-
-            return matches[0].Value;
+             _context.Tokens.AddAsync(tokenEntity);
+             _context.SaveChangesAsync();
         }
 
     }

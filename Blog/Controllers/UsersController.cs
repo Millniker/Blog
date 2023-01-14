@@ -2,6 +2,7 @@
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace Blog.Controllers
 {
@@ -32,9 +33,10 @@ namespace Blog.Controllers
         [HttpPost]
         [Route("logout")]
         [Authorize]
-        public async Task<Response> Logout()
+        public  IActionResult Logout()
         {
-            return await _authService.LogoutUser(HttpContext);
+            _authService.LogoutUser(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+            return Ok();
         }
 
         [HttpGet]

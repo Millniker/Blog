@@ -18,7 +18,8 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
-
+builder.Services.AddScoped<IIsValidToken, IsValidToken>();
+builder.Services.AddHostedService<HostedTokenService>();
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -55,7 +56,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseAuthentication();
-app.UseAuthorization();
 
 app.UseHttpsRedirection();
 

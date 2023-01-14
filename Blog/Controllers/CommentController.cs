@@ -1,7 +1,10 @@
 ﻿using Blog.DTO;
 using Blog.Models.DTO;
 using Blog.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
+using System.Linq.Expressions;
 
 namespace Blog.Controllers
 {
@@ -10,9 +13,11 @@ namespace Blog.Controllers
     public class CommentController : Controller
     {
         private readonly ICommentService _commentService;
-        public CommentController(ICommentService commentService)
+        private readonly IIsValidToken _isValidToken;
+        public CommentController(ICommentService commentService, IIsValidToken isValidToken)
         {
             _commentService = commentService;
+            _isValidToken = isValidToken;
         }
         [HttpGet]
         [Route("{id}/tree")]
@@ -22,9 +27,19 @@ namespace Blog.Controllers
         }
         [HttpPost]
         [Route("{id}/comment")]
+        [Authorize]
         public IActionResult AddComment(Guid id,[FromBody] CreateCommentDto createCommentDto)
         {
-             _commentService.AddComment(id, createCommentDto,User.Identity.Name);
+            try
+            {
+                _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                _commentService.AddComment(id, createCommentDto, User.Identity.Name);
+            }
+            catch(Unauthorized)
+            {
+
+            }
+             
             return Ok();
         }
         [HttpPut]
