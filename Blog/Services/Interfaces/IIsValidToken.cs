@@ -2,7 +2,7 @@
 {
     public interface IIsValidToken
     {
-        public bool CheckIsValidToken(string token);
+        public void CheckIsValidToken(string token);
 
     }
 }

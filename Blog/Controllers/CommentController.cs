@@ -1,4 +1,5 @@
 ﻿using Blog.DTO;
+using Blog.Exeption;
 using Blog.Models.DTO;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -35,11 +36,10 @@ namespace Blog.Controllers
                 _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
                 _commentService.AddComment(id, createCommentDto, User.Identity.Name);
             }
-            catch(Unauthorized)
+            catch(AuthenticationUserException)
             {
-
+                return Unauthorized();
             }
-             
             return Ok();
         }
         [HttpPut]

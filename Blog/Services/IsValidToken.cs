@@ -1,5 +1,7 @@
-﻿using Blog.Models;
+﻿using Blog.Exeption;
+using Blog.Models;
 using Blog.Services.Interfaces;
+using System.Data;
 
 namespace Blog.Services
 {
@@ -10,16 +12,12 @@ namespace Blog.Services
         {
             _context = applicationDbContext;
         }
-        public bool CheckIsValidToken(string token)
+        public void CheckIsValidToken(string token)
         {
             var disActiveToken = _context.Tokens.Where(t => t.Token == token);
             if (disActiveToken.Any())
             {
-                return true;
-            }
-            else
-            {
-                return false;
+                throw new AuthenticationUserException();
             }
         }
     }
