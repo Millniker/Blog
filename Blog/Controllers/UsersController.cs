@@ -1,4 +1,5 @@
-﻿using Blog.Models.DTO;
+﻿using Blog.Exeption;
+using Blog.Models.DTO;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -12,47 +13,121 @@ namespace Blog.Controllers
     {
         private readonly IAuthService _authService;
         private readonly IProfileService _profileService;
-        public UsersController(IAuthService authService, IProfileService profileService)
+        private readonly IIsValidToken _isValidToken;
+        public UsersController(IAuthService authService, IProfileService profileService, IIsValidToken isValidToken)
         {
             _authService = authService;
-            _profileService = profileService;   
+            _profileService = profileService;
+            _isValidToken = isValidToken;
         }
 
         [HttpPost]
         [Route("register")]
-        public async Task<TokenResponse> Register([FromBody] UserRegisterModel userRegisterModel)
+        public ActionResult<TokenResponse> Register([FromBody] UserRegisterModel userRegisterModel)
         {
-           return await _authService.RegisterUser(userRegisterModel);
+            if((userRegisterModel.BirthDate - DateTime.Now).TotalMilliseconds > 0)
+            {
+                return BadRequest(new Response
+                {   
+                    status = "400",
+                    message = "Birth date can't be later than today"
+                });
+            }
+            try{
+                return _authService.RegisterUser(userRegisterModel);
+            }
+            catch(DuplicateUserException)
+            {
+                return Conflict(new
+                {
+
+                    DuplicateUserName = new[]
+                    {
+                        $"Username '{userRegisterModel.Email}' is already taken"
+                    }
+
+                });
+            }
+           
         }
         [HttpPost]
         [Route("login")]
-        public async Task<TokenResponse> Login([FromBody] LoginCredential loginCredential)
+        public ActionResult<TokenResponse> Login([FromBody] LoginCredential loginCredential)
         {
-            return await _authService.LoginUser(loginCredential);
+            try
+            {
+
+                return _authService.LoginUser(loginCredential);
+            }
+            catch (AuthenticationUserException)
+            {
+                return BadRequest (new Response
+                {
+                    status = null,
+                    message = "Login faild"
+                });
+            }
         }
         [HttpPost]
         [Route("logout")]
         [Authorize]
         public  IActionResult Logout()
         {
-            _authService.LogoutUser(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
-            return Ok();
+            try
+            {
+                _authService.LogoutUser(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                return Ok();
+            }
+            catch (AuthenticationUserException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpGet]
         [Route("profile")]
         [Authorize]
-        public async Task<UserDto> Profile()
+        public ActionResult<UserDto> Profile()
         {
-            return await _profileService.GetUserProfile(User.Identity.Name);
+            try
+            {
+                _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                return _profileService.GetUserProfile(User.Identity.Name);
+            }
+            catch (AuthenticationUserException)
+            {
+                return Unauthorized();
+            }
         }
 
         [HttpPut]
         [Route("profile")]
         [Authorize]
-        public async Task UpdateProfile(UserEditModel userEditModel)
+        public IActionResult UpdateProfile(UserEditModel userEditModel)
         {
-             await _profileService.UpdateProfile(userEditModel, User.Identity.Name);
+            try
+            {
+                _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                _profileService.UpdateProfile(userEditModel, User.Identity.Name);
+                return Ok();
+            }
+            catch (AuthenticationUserException)
+            {
+                return Unauthorized();
+            }
+            catch (DuplicateUserEmail)
+            {
+                return Conflict(new
+                {
+
+                    DuplicateUserName = new[]
+                    {
+                        $"Username '{userEditModel.email}' is already taken"
+                    }
+
+                });
+            }
+             
         }
 
     }

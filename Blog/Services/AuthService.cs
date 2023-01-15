@@ -1,4 +1,5 @@
 ﻿using Azure.Core;
+using Blog.Exeption;
 using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Models.Entities;
@@ -7,6 +8,7 @@ using IdentityModel;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
+using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
@@ -20,9 +22,12 @@ namespace Blog.Services
         {
             _context = context;
         }
-        public async Task<TokenResponse> RegisterUser(UserRegisterModel userRegisterModel)
+        public TokenResponse RegisterUser(UserRegisterModel userRegisterModel)
         {
-            //TODO добавить валидацию входных данных
+            if (_context.UserEntity.Any(user => user.Email == userRegisterModel.Email))
+            {
+                throw new DuplicateUserException();
+            }
             var userEntity = new UserEntity
             {
                 Id = Guid.NewGuid(),
@@ -36,8 +41,8 @@ namespace Blog.Services
 
         };
 
-            await _context.UserEntity.AddAsync(userEntity);
-            await _context.SaveChangesAsync();
+             _context.UserEntity.Add(userEntity);
+             _context.SaveChanges();
 
             var loginCredentials = new LoginCredential
             {
@@ -45,13 +50,13 @@ namespace Blog.Services
                 email = userEntity.Email
             };
 
-            return await LoginUser(loginCredentials);
+            return  LoginUser(loginCredentials);
         }
 
-        public async Task<TokenResponse> LoginUser(LoginCredential loginCredentials)
+        public  TokenResponse LoginUser(LoginCredential loginCredentials)
         {
 
-            var identity = await GetIdentity(loginCredentials.email, loginCredentials.password);
+            var identity =  GetIdentity(loginCredentials.email, loginCredentials.password);
 
             var now = DateTime.UtcNow;
 
@@ -76,17 +81,17 @@ namespace Blog.Services
             return result;
         }
 
-        private async Task<ClaimsIdentity> GetIdentity(string email, string password)
+        private  ClaimsIdentity GetIdentity(string email, string password)
         {
-            var userEntity = await _context
+            var userEntity =  _context
                 .UserEntity
                 .Where(x => x.Email == email && x.Password == password)
-                .FirstOrDefaultAsync();
-            /*
-                        if (userEntity == null)
-                        {
+                .FirstOrDefault();
 
-                        }*/
+            if (userEntity == null)
+            {
+                throw new AuthenticationUserException();
+            }
 
             var claims = new List<Claim>
         {
@@ -115,8 +120,8 @@ namespace Blog.Services
                 ExpiredDate = expiredDate
             };
 
-             _context.Tokens.AddAsync(tokenEntity);
-             _context.SaveChangesAsync();
+             _context.Tokens.Add(tokenEntity);
+             _context.SaveChanges();
         }
 
     }

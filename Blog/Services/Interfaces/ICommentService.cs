@@ -7,8 +7,8 @@ namespace Blog.Services.Interfaces
     {
         public List<CommentDto> GetComments(Guid commentId);
         public void AddComment(Guid postId, CreateCommentDto createComment, string userId);
-        public void DeleteComment(Guid commentId);
-        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto);
+        public void DeleteComment(Guid commentId,string userId);
+        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto, string userId);
 
         
 

@@ -1,4 +1,5 @@
 ﻿using Blog.DTO;
+using Blog.Exeption;
 using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Models.Entities;
@@ -24,7 +25,7 @@ namespace Blog.Services
             
             if (comment == null)
             {
-                //trow
+                throw new CommentsNotFoundException();
             }
 
             var CommentList =
@@ -48,16 +49,16 @@ namespace Blog.Services
             var postEntity = _context.Post.Where(x => x.Id == postId).FirstOrDefault();
             if(postEntity == null)
             {
-                //trow
+                throw new PostNotFoundExeption();
             }
             var userEntity = _context.UserEntity.Where(x => x.Id.ToString() == userId).FirstOrDefault();
             if (commentDto.ParentId != null)
 
             {
                 var parentComment = _context.Comments.Where(c => c.Id == commentDto.ParentId).FirstOrDefault();
-                if(parentComment == null)
+                if(parentComment == null || parentComment.DeleteDate!=null)
                 {
-                    //trow
+                    throw new CommentsNotFoundException();
                 }
                 parentComment.SubComments += 1;
                 _context.Comments.Entry(parentComment).State = EntityState.Modified;
@@ -78,35 +79,48 @@ namespace Blog.Services
             postEntity.Comments.Add(comment);
             postEntity.CommentCount += 1;
             _context.Comments.Add(comment);
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
             _context.Post.Entry(postEntity).State = EntityState.Modified;
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
 
         }
-        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto)
+        public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto, string userId)
         {
             var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
+            if(comment.AuthorId != new Guid(userId))
+            {
+                throw new ForbiddenException();
+            }
             if (comment == null)
             {
-
+                throw new CommentsNotFoundException();
             }
             if (comment.DeleteDate != null)
             {
-                //trow 
+                throw new CommentsNotFoundException();
             }
 
             comment.Content = updateCommentDto.content;
             comment.ModifiedDate = DateTime.Now;
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
 
            
         }
-        public void DeleteComment(Guid commentId)
+        public void DeleteComment(Guid commentId, string userId)
         {
             var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
+
+            if (comment.AuthorId != new Guid(userId))
+            {
+                throw new ForbiddenException();
+            }
             if (comment == null)
             {
-
+                throw new CommentsNotFoundException();
+            }
+            if (comment.DeleteDate != null)
+            {
+                throw new CommentsNotFoundException();
             }
             if (comment.ParentId != null)
             {
@@ -123,7 +137,7 @@ namespace Blog.Services
             {
                 _context.Comments.Remove(comment);
             }
-            _context.SaveChangesAsync();
+            _context.SaveChanges();
 
 
             

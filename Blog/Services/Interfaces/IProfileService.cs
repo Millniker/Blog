@@ -4,7 +4,7 @@ namespace Blog.Services.Interfaces
 {
     public interface IProfileService
     {
-        public Task<UserDto> GetUserProfile(string id);
-        public Task UpdateProfile(UserEditModel userEditModel, string id);
+        public UserDto GetUserProfile(string id);
+        public void UpdateProfile(UserEditModel userEditModel, string id);
     }
 }

@@ -24,7 +24,18 @@ namespace Blog.Controllers
         [Route("{id}/tree")]
         public ActionResult<List<CommentDto>> GetComments(Guid id)
         {
-            return _commentService.GetComments(id);
+            try
+            {
+                return _commentService.GetComments(id);
+            }
+            catch (CommentsNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Comment with id={id} not found in  database"
+                });
+            }
         }
         [HttpPost]
         [Route("{id}/comment")]
@@ -35,26 +46,85 @@ namespace Blog.Controllers
             {
                 _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
                 _commentService.AddComment(id, createCommentDto, User.Identity.Name);
+                return Ok();
             }
             catch(AuthenticationUserException)
             {
                 return Unauthorized();
             }
-            return Ok();
+            catch (PostNotFoundExeption)
+            {
+                return NotFound(new Response {
+                    status = "Error",
+                    message = $"Post with id={id} not found in  database"
+                });
+            }
+            catch (CommentsNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Comment with id={createCommentDto.ParentId} not found in  database"
+                });
+            }
         }
         [HttpPut]
         [Route("{id}")]
+        [Authorize]
         public IActionResult UpdateComment(Guid id, [FromBody] UpdateCommentDto updateCommentDto)
         {
-            _commentService.EditComment(id, updateCommentDto);
-            return Ok();
+            try
+            {
+                _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                _commentService.EditComment(id, updateCommentDto, User.Identity.Name);
+                return Ok();
+            }
+            catch (AuthenticationUserException)
+            {
+                return Unauthorized();
+            }
+            catch (ForbiddenException)
+            {
+                return Forbid();
+            }
+            catch (CommentsNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Comment with id={id} not found in  database"
+                });
+            }
+
         }
         [HttpDelete]
         [Route("{id}")]
+        [Authorize]
         public IActionResult DeleteComment(Guid id)
         {
-            _commentService.DeleteComment(id);
-            return Ok();
+            try
+            {
+                _isValidToken.CheckIsValidToken(Request.Headers[HeaderNames.Authorization].ToString().Replace("Bearer ", ""));
+                _commentService.DeleteComment(id, User.Identity.Name);
+                return Ok();
+            }
+            catch (AuthenticationUserException)
+            {
+                return Unauthorized();
+            }
+            catch (ForbiddenException)
+            {
+                return Forbid();
+            }
+            catch (CommentsNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Comment with id={id} not found in  database"
+                });
+            }
+            
         }
 
     }

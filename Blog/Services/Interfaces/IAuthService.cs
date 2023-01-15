@@ -4,8 +4,8 @@ namespace Blog.Services.Interfaces
 {
     public interface IAuthService
     {
-        public Task<TokenResponse> LoginUser(LoginCredential loginCredentials);
-        public Task<TokenResponse> RegisterUser(UserRegisterModel userRegisterModel);
+        public TokenResponse LoginUser(LoginCredential loginCredentials);
+        public TokenResponse RegisterUser(UserRegisterModel userRegisterModel);
         public void LogoutUser(string token);
     }
 }

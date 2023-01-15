@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Blog.Migrations
 {
     /// <inheritdoc />
-    public partial class addDb : Migration
+    public partial class adddb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,8 +69,8 @@ namespace Blog.Migrations
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Gender = table.Column<int>(type: "int", nullable: false),
                     PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    CreatedPosts = table.Column<int>(type: "int", nullable: false),
-                    Likes = table.Column<int>(type: "int", nullable: false)
+                    Likes = table.Column<int>(type: "int", nullable: false),
+                    CreatedPosts = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

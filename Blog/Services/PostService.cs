@@ -1,10 +1,13 @@
 ﻿using Blog.DTO;
+using Blog.Exeption;
 using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Models.Enums;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+
 namespace Blog.Services
 {
 
@@ -20,17 +23,17 @@ namespace Blog.Services
         public PostPagedListDto GetPosts(Guid[]? tags, string? author, Int32? min, Int32? max, PostSorting? sorting, Int32 page, Int32 size, string userId)
         {
             IQueryable<PostEntity> query = _context.Post.Include(one => one.Tags);
-            if (tags.Any() && tags != null)
-            {
-                foreach (var tag in tags)
+
+            foreach (var tag in tags)
                 {
-                    query = query.Where(p => p.Tags
+
+                query = query.Where(p => p.Tags
                     .Select(k => k.Id).
                     Contains(tag));
 
                 }
 
-            }
+            
             var tagsss = _context.Post.Include(p => p.Tags);
             if (min != null)
             {
@@ -69,9 +72,9 @@ namespace Blog.Services
             int totalPostsCount = query.Count();
             int pageCount = (int)Math.Ceiling(totalPostsCount / (decimal)size);
 
-            if (page > pageCount)
+            if (page > pageCount && pageCount!=0)
             {
-                //  throw
+                throw new PageNotFoundException();
             }
             List<PostEntity> posts = query.Skip(size * (page - 1)).Take(size).ToList();
             var PostList = new PostPagedListDto
@@ -128,7 +131,7 @@ namespace Blog.Services
                 .FirstOrDefault();
             if (post == null)
             {
-
+                throw new PageNotFoundException();
             }
             List<CommentDto> comments = GetCommentsList(id);
             return new PostFullDto
@@ -182,16 +185,17 @@ namespace Blog.Services
 
         }
        
-        public Response SetLike(Guid postId, string userId)
+        public void SetLike(Guid postId, string userId)
         {
             
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
-            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
-            author.Likes += 1;
             if (post == null)
             {
-
+                throw new PageNotFoundException();
             }
+            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
+            author.Likes += 1;
+            
             var userLikedPost = HasLike(userId, postId);
             if (!userLikedPost)
             {
@@ -209,26 +213,19 @@ namespace Blog.Services
             }
             else
             {
-                //trow
+                throw new UserLikeExeption();
             }
-            Response result = new()
-            {
-                status = "200",
-                message = "Success"
 
-            };
-
-
-            return result;
         }
-        public Response DeleteLike(Guid postId, string userId)
+        public void DeleteLike(Guid postId, string userId)
         {
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
             var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
             author.Likes -= 1;
             if (post == null)
             {
-
+                    throw new PageNotFoundException();
+               
             }
             var userLikedPost = HasLike(userId, postId);
             if (userLikedPost)
@@ -242,17 +239,9 @@ namespace Blog.Services
             }
             else
             {
-                //trow
+                throw new UserLikeExeption();
             }
-            Response result = new()
-            {
-                status = "200",
-                message = "Success"
 
-            };
-
-
-            return result;
         }
     }
 }
