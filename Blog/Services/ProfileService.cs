@@ -22,6 +22,7 @@ namespace Blog.Services
             var userDto = new UserDto
             {
                 Id = userEntity.Id,
+                CreatedDate=userEntity.Created,
                 email = userEntity.Email,
                 fullName = userEntity.FullName,
                 birthDate = userEntity.BirthDate,

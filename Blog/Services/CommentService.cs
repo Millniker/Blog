@@ -6,7 +6,9 @@ using Blog.Models.Entities;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.Design;
 using System.Data;
+using System.Xml.Linq;
 
 namespace Blog.Services
 {
@@ -27,13 +29,32 @@ namespace Blog.Services
             {
                 throw new CommentsNotFoundException();
             }
+            if(commentsEntities.Count() == 0) {
+                throw new CommentWithoutChilds();
+            }
+            List<CommentsEntity> allComments = new List<CommentsEntity>();
+           
+            foreach (var comm in commentsEntities)
+            {
 
+                allComments.Add(comm);
+                List<CommentsEntity> subcomments=new List<CommentsEntity>();
+                subcomments = GetAllComments(comm.Id, subcomments);
+                foreach (var comme in subcomments)
+                {
+                    if (comme != null)
+                    {
+                        allComments.Add(comme);
+                    }
+                }
+                }
             var CommentList =
-                (from com in commentsEntities
+                (from com in allComments
                  select new CommentDto
                  {
                      Id = com.Id,
                      modifiedDate = com.ModifiedDate,
+                     CreatedDate = com.CreatedTime,
                      deleteDate = com.DeleteDate,
                      author = com.Author,
                      authorId = com.AuthorId,
@@ -41,7 +62,22 @@ namespace Blog.Services
                      subComments = com.SubComments,
                      
                  }).ToList();
+
             return CommentList;
+        }
+        public  List<CommentsEntity> GetAllComments(Guid parentID, List<CommentsEntity> subcomments)
+        {
+            if (parentID == null)
+            {
+                return subcomments;
+            }
+            IQueryable<CommentsEntity> newComments = _context.Comments.Where(x => x.ParentId == parentID).OrderBy(c => c.CreatedTime);
+            foreach (var com in newComments)
+            {
+                subcomments.Add(com);
+                GetAllComments(com.Id, subcomments);
+            }
+            return subcomments;
         }
         public void AddComment (Guid postId,CreateCommentDto commentDto, string userId)
         {

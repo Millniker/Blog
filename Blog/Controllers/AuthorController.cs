@@ -1,4 +1,5 @@
 ﻿using Blog.DTO;
+using Blog.Models.DTO;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +19,18 @@ namespace Blog.Controllers
         [Route("list")]
         public ActionResult<List<AuthorDto>> GetList()
         {
-            return _authorService.GetAuthorList();
+            try {
+                return _authorService.GetAuthorList();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
         }
     }
 }

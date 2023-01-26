@@ -15,9 +15,22 @@ namespace Blog.Controllers
             _tagService = tagService;
         }
         [HttpGet]
-        public  List<TagDto> Gettag()
+        public  ActionResult<List<TagDto>> Gettag()
         {
-            return _tagService.GetTegs();
+            try
+            {
+                return _tagService.GetTegs();
+               
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
         }
     }
 }

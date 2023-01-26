@@ -33,7 +33,26 @@ namespace Blog.Controllers
                 return NotFound(new Response
                 {
                     status = "Error",
-                    message = $"Comment with id={id} not found in  database"
+                    message = $"Comment with id={id} not found in database"
+                });
+            }
+            catch (CommentWithoutChilds)
+            {
+                return BadRequest(new Response
+                {
+                    status = "Error",
+                    message= $"Comment with id={id} is not parent element"
+                }
+                    
+                    );
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
                 });
             }
         }
@@ -67,6 +86,15 @@ namespace Blog.Controllers
                     message = $"Comment with id={createCommentDto.ParentId} not found in  database"
                 });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
         }
         [HttpPut]
         [Route("{id}")]
@@ -93,6 +121,15 @@ namespace Blog.Controllers
                 {
                     status = "Error",
                     message = $"Comment with id={id} not found in  database"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
                 });
             }
 
@@ -124,7 +161,16 @@ namespace Blog.Controllers
                     message = $"Comment with id={id} not found in  database"
                 });
             }
-            
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
+
         }
 
     }

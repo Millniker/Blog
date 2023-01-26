@@ -7,6 +7,8 @@ namespace Blog.Models.DTO
     {
         public Guid Id { get; set; }
         [Required]
+        public DateTime CreatedDate { get; set; }   
+        [Required]
         [MinLength(6)]
         [EmailAddress]
         public string email { get; set; }

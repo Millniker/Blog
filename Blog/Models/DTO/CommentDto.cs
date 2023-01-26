@@ -9,7 +9,7 @@ namespace Blog.DTO
         [Required]
         [MinLength(1)]
         public string content { get; set; }
-
+        public DateTime CreatedDate { get; set; }
         public DateTime? modifiedDate { get; set; }
         public DateTime? deleteDate { get; set; }
         [Required]

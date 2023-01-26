@@ -18,12 +18,13 @@ namespace Blog.Services
         {
             var listGenreDtos = new List<TagDto>();
             var tagEntity = _context.Tags;
-            foreach (var genreEntity in tagEntity)
+            foreach (var tag in tagEntity)
             {
                 var tagDto = new TagDto
                 {
-                    Id = genreEntity.Id,
-                    name = genreEntity.Name
+                    Id = tag.Id,
+                    CreatedDate= tag.CreatedDate,
+                    Name = tag.Name
                 };
                 listGenreDtos.Add(tagDto);
             }

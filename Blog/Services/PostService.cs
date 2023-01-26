@@ -83,21 +83,23 @@ namespace Blog.Services
                          select new PostDto
                          {
                              Id = post.Id,
-                             title = post.Title,
+                             CreatedDate=post.Created,
+                             Title = post.Title,
                              Description = post.Description,
-                             readingTime = post.ReadingTime,
-                             image = post.Image,
-                             authotId = post.AuthorId,
-                             authot = post.Author,
-                             likes = post.Likes,
-                             hasLike = HasLike(userId, post.Id),
+                             ReadingTime = post.ReadingTime,
+                             Image = post.Image,
+                             AuthorId = post.AuthorId,
+                             Author = post.Author,
+                             Likes = post.Likes,
+                             HasLike = HasLike(userId, post.Id),
 
-                             commentCount = post.CommentCount,
+                             CommentCount = post.CommentCount,
                              Tags = (from tag in post.Tags
                                      select new TagDto
                                      {
                                          Id =tag.Id,
-                                         name = tag.Name
+                                         Name = tag.Name,
+                                         CreatedDate=tag.CreatedDate
 
                                      }).ToList(),
                          }).ToList(),
@@ -138,6 +140,7 @@ namespace Blog.Services
             {
 
                 Id = post.Id,
+                CreatedDate = post.Created,
                 title = post.Title,
                 Description = post.Description,
                 readingTime = post.ReadingTime,
@@ -152,7 +155,9 @@ namespace Blog.Services
                         select new TagDto
                         {
                             Id = tag.Id,
-                            name = tag.Name
+                            CreatedDate=tag.CreatedDate,
+                            Name = tag.Name
+                         
 
                         }).ToList(),
                 comments = comments,
@@ -220,13 +225,14 @@ namespace Blog.Services
         public void DeleteLike(Guid postId, string userId)
         {
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
-            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
-            author.Likes -= 1;
+            
             if (post == null)
             {
                     throw new PageNotFoundException();
                
             }
+            var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
+            author.Likes -= 1;
             var userLikedPost = HasLike(userId, postId);
             if (userLikedPost)
             {

@@ -48,7 +48,16 @@ namespace Blog.Controllers
 
                 });
             }
-           
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
+
         }
         [HttpPost]
         [Route("login")]
@@ -67,6 +76,15 @@ namespace Blog.Controllers
                     message = "Login faild"
                 });
             }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
         }
         [HttpPost]
         [Route("logout")]
@@ -81,6 +99,15 @@ namespace Blog.Controllers
             catch (AuthenticationUserException)
             {
                 return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
             }
         }
 
@@ -97,6 +124,15 @@ namespace Blog.Controllers
             catch (AuthenticationUserException)
             {
                 return Unauthorized();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
             }
         }
 
@@ -127,7 +163,16 @@ namespace Blog.Controllers
 
                 });
             }
-             
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
+
         }
 
     }

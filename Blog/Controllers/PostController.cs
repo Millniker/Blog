@@ -32,9 +32,6 @@ namespace Blog.Controllers
             _isValidToken = isValidToken;
         }
         [HttpGet]
-        [ProducesResponseType(typeof(PostPagedListDto), StatusCodes.Status200OK)]
-        [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(Response), StatusCodes.Status500InternalServerError)]
         public ActionResult<PostPagedListDto> GetPosts([FromQuery] Guid[]? tags, string? author = null, Int32? min = null, Int32? max = null, PostSorting? sorting = null, Int32 page = 1, Int32 size = 5)
         {
             foreach (var tag in tags)
@@ -50,7 +47,8 @@ namespace Blog.Controllers
                 }
             }
 
-                try {
+            try {
+                
                 return _postService.GetPosts(tags, author, min, max, sorting, page, size, User.Identity.Name);
 
             }
@@ -60,6 +58,14 @@ namespace Blog.Controllers
                 {
                     status ="400",
                     message = "Invalid value for attribute page"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response{ 
+                    
+                    status ="Error",
+                    message = ex.Message,
                 });
             }
             
@@ -80,7 +86,16 @@ namespace Blog.Controllers
                     message = $"Post with id={id} not found in database"
                 });
             }
-          
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
+
         }
         [HttpPost]
         [Route("{postId:guid}/like")]
@@ -102,6 +117,23 @@ namespace Blog.Controllers
                 return BadRequest(new Response{
                     status= "Error",
                     message= "Like on this post already set by user"
+                });
+            }
+            catch (PageNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Post with id={postId} not found in  database"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
                 });
             }
         }
@@ -129,7 +161,24 @@ namespace Blog.Controllers
                     message = "There are no like from user by this post"
                 });
             }
-           
+            catch (PageNotFoundException)
+            {
+                return NotFound(new Response
+                {
+                    status = "Error",
+                    message = $"Post with id={postId} not found in  database"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
+                    message = ex.Message,
+                });
+            }
+
         }
     }
 }
