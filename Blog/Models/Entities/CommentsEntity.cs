@@ -19,7 +19,7 @@ namespace Blog.Models.Entities
         [Required]
         public DateTime CreatedTime { get; set; }
         public Int32 SubComments { get; set; }
-        public Guid? ParentId {get; set; }
+        public Guid? ParentId { get; set; }
         [ForeignKey("Post")]
         public Guid PostId { get; set; }
 

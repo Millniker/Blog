@@ -1,5 +1,4 @@
 ﻿using Blog.Models.DTO;
-using Blog.Services;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,12 +14,12 @@ namespace Blog.Controllers
             _tagService = tagService;
         }
         [HttpGet]
-        public  ActionResult<List<TagDto>> Gettag()
+        public ActionResult<List<TagDto>> Gettag()
         {
             try
             {
                 return _tagService.GetTegs();
-               
+
             }
             catch (Exception ex)
             {

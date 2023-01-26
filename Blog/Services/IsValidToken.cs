@@ -5,10 +5,10 @@ using System.Data;
 
 namespace Blog.Services
 {
-    public class IsValidToken: IIsValidToken
+    public class IsValidToken : IIsValidToken
     {
         private readonly ApplicationDbContext _context;
-        public IsValidToken (ApplicationDbContext applicationDbContext)
+        public IsValidToken(ApplicationDbContext applicationDbContext)
         {
             _context = applicationDbContext;
         }

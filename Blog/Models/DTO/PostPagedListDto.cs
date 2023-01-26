@@ -7,6 +7,6 @@ namespace Blog.Models.DTO
         public List<PostDto> Posts { get; set; }
         public PageInfoModel Pagination { get; set; }
 
-       
+
     }
 }

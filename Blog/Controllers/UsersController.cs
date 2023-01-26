@@ -25,18 +25,19 @@ namespace Blog.Controllers
         [Route("register")]
         public ActionResult<TokenResponse> Register([FromBody] UserRegisterModel userRegisterModel)
         {
-            if((userRegisterModel.BirthDate - DateTime.Now).TotalMilliseconds > 0)
+            if ((userRegisterModel.BirthDate - DateTime.Now).TotalMilliseconds > 0)
             {
                 return BadRequest(new Response
-                {   
+                {
                     status = "400",
                     message = "Birth date can't be later than today"
                 });
             }
-            try{
+            try
+            {
                 return _authService.RegisterUser(userRegisterModel);
             }
-            catch(DuplicateUserException)
+            catch (DuplicateUserException)
             {
                 return Conflict(new
                 {
@@ -70,7 +71,7 @@ namespace Blog.Controllers
             }
             catch (AuthenticationUserException)
             {
-                return BadRequest (new Response
+                return BadRequest(new Response
                 {
                     status = null,
                     message = "Login faild"
@@ -89,7 +90,7 @@ namespace Blog.Controllers
         [HttpPost]
         [Route("logout")]
         [Authorize]
-        public  IActionResult Logout()
+        public IActionResult Logout()
         {
             try
             {

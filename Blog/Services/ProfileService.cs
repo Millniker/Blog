@@ -2,12 +2,11 @@
 using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Services.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using System.Data;
 
 namespace Blog.Services
 {
-    public class ProfileService: IProfileService
+    public class ProfileService : IProfileService
     {
         private readonly ApplicationDbContext _context;
         public ProfileService(ApplicationDbContext context)
@@ -16,13 +15,13 @@ namespace Blog.Services
         }
         public UserDto GetUserProfile(string id)
         {
-            var userEntity =  _context
+            var userEntity = _context
                 .UserEntity.FirstOrDefault(x => x.Id.ToString() == id);
 
             var userDto = new UserDto
             {
                 Id = userEntity.Id,
-                CreatedDate=userEntity.Created,
+                CreatedDate = userEntity.Created,
                 email = userEntity.Email,
                 fullName = userEntity.FullName,
                 birthDate = userEntity.BirthDate,
@@ -33,12 +32,12 @@ namespace Blog.Services
         }
         public void UpdateProfile(UserEditModel userEditModel, string id)
         {
-            var user =   _context
+            var user = _context
                 .UserEntity
                 .Where(x => x.Id.ToString() == id)
                 .FirstOrDefault();
 
-            var userWhithSameEmail =  _context
+            var userWhithSameEmail = _context
                 .UserEntity
                 .Where(x => x.Email == userEditModel.email)
                 .FirstOrDefault();
@@ -49,14 +48,14 @@ namespace Blog.Services
             {
                 throw new DuplicateUserEmail();
             }
-            
+
             user.Email = userEditModel.email;
             user.FullName = userEditModel.fullName;
             user.BirthDate = userEditModel.birthDate;
             user.Gender = userEditModel.gender;
             user.PhoneNumber = user.PhoneNumber;
 
-             _context.SaveChanges();
+            _context.SaveChanges();
 
 
         }

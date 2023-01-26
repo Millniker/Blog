@@ -5,7 +5,6 @@ using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
-using System.Linq.Expressions;
 
 namespace Blog.Controllers
 {
@@ -41,9 +40,9 @@ namespace Blog.Controllers
                 return BadRequest(new Response
                 {
                     status = "Error",
-                    message= $"Comment with id={id} is not parent element"
+                    message = $"Comment with id={id} is not parent element"
                 }
-                    
+
                     );
             }
             catch (Exception ex)
@@ -59,7 +58,7 @@ namespace Blog.Controllers
         [HttpPost]
         [Route("{id}/comment")]
         [Authorize]
-        public IActionResult AddComment(Guid id,[FromBody] CreateCommentDto createCommentDto)
+        public IActionResult AddComment(Guid id, [FromBody] CreateCommentDto createCommentDto)
         {
             try
             {
@@ -67,13 +66,14 @@ namespace Blog.Controllers
                 _commentService.AddComment(id, createCommentDto, User.Identity.Name);
                 return Ok();
             }
-            catch(AuthenticationUserException)
+            catch (AuthenticationUserException)
             {
                 return Unauthorized();
             }
             catch (PostNotFoundExeption)
             {
-                return NotFound(new Response {
+                return NotFound(new Response
+                {
                     status = "Error",
                     message = $"Post with id={id} not found in  database"
                 });

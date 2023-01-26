@@ -9,7 +9,7 @@ namespace Blog.Models.DTO
         [MinLength(6)]
         [EmailAddress]
         public string email { get; set; }
-        
+
         [Required]
         [MinLength(1)]
         public string fullName { get; set; }
@@ -18,6 +18,6 @@ namespace Blog.Models.DTO
         public Gender gender { get; set; }
         [Phone]
         public string PhoneNumber { get; set; }
-        
+
     }
 }

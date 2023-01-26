@@ -5,14 +5,11 @@ using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.ComponentModel.Design;
 using System.Data;
-using System.Xml.Linq;
 
 namespace Blog.Services
 {
-    public class CommentService: ICommentService
+    public class CommentService : ICommentService
     {
         private readonly ApplicationDbContext _context;
         public CommentService(ApplicationDbContext context)
@@ -22,23 +19,24 @@ namespace Blog.Services
         }
         public List<CommentDto> GetComments(Guid commentId)
         {
-            IQueryable<CommentsEntity> commentsEntities =_context.Comments.Where(x => x.ParentId == commentId).OrderBy(c =>c.CreatedTime);
-            var comment = _context.Comments.Where(x=> x.Id == commentId);
-            
+            IQueryable<CommentsEntity> commentsEntities = _context.Comments.Where(x => x.ParentId == commentId).OrderBy(c => c.CreatedTime);
+            var comment = _context.Comments.Where(x => x.Id == commentId);
+
             if (comment == null)
             {
                 throw new CommentsNotFoundException();
             }
-            if(commentsEntities.Count() == 0) {
+            if (commentsEntities.Count() == 0)
+            {
                 throw new CommentWithoutChilds();
             }
             List<CommentsEntity> allComments = new List<CommentsEntity>();
-           
+
             foreach (var comm in commentsEntities)
             {
 
                 allComments.Add(comm);
-                List<CommentsEntity> subcomments=new List<CommentsEntity>();
+                List<CommentsEntity> subcomments = new List<CommentsEntity>();
                 subcomments = GetAllComments(comm.Id, subcomments);
                 foreach (var comme in subcomments)
                 {
@@ -47,7 +45,7 @@ namespace Blog.Services
                         allComments.Add(comme);
                     }
                 }
-                }
+            }
             var CommentList =
                 (from com in allComments
                  select new CommentDto
@@ -60,12 +58,12 @@ namespace Blog.Services
                      authorId = com.AuthorId,
                      content = com.Content,
                      subComments = com.SubComments,
-                     
+
                  }).ToList();
 
             return CommentList;
         }
-        public  List<CommentsEntity> GetAllComments(Guid parentID, List<CommentsEntity> subcomments)
+        public List<CommentsEntity> GetAllComments(Guid parentID, List<CommentsEntity> subcomments)
         {
             if (parentID == null)
             {
@@ -79,11 +77,11 @@ namespace Blog.Services
             }
             return subcomments;
         }
-        public void AddComment (Guid postId,CreateCommentDto commentDto, string userId)
+        public void AddComment(Guid postId, CreateCommentDto commentDto, string userId)
         {
             CommentsEntity commentsEntity = new CommentsEntity();
             var postEntity = _context.Post.Where(x => x.Id == postId).FirstOrDefault();
-            if(postEntity == null)
+            if (postEntity == null)
             {
                 throw new PostNotFoundExeption();
             }
@@ -92,7 +90,7 @@ namespace Blog.Services
 
             {
                 var parentComment = _context.Comments.Where(c => c.Id == commentDto.ParentId).FirstOrDefault();
-                if(parentComment == null || parentComment.DeleteDate!=null)
+                if (parentComment == null || parentComment.DeleteDate != null)
                 {
                     throw new CommentsNotFoundException();
                 }
@@ -123,7 +121,7 @@ namespace Blog.Services
         public void EditComment(Guid commentId, UpdateCommentDto updateCommentDto, string userId)
         {
             var comment = _context.Comments.Where(c => c.Id == commentId).FirstOrDefault();
-            if(comment.AuthorId != new Guid(userId))
+            if (comment.AuthorId != new Guid(userId))
             {
                 throw new ForbiddenException();
             }
@@ -140,7 +138,7 @@ namespace Blog.Services
             comment.ModifiedDate = DateTime.Now;
             _context.SaveChanges();
 
-           
+
         }
         public void DeleteComment(Guid commentId, string userId)
         {
@@ -163,7 +161,7 @@ namespace Blog.Services
                 var parentComment = _context.Comments.Where(s => s.Id == comment.ParentId).FirstOrDefault();
                 parentComment.SubComments -= 1;
             }
-            if (comment.SubComments!=0)
+            if (comment.SubComments != 0)
             {
                 comment.DeleteDate = DateTime.Now;
                 comment.ModifiedDate = DateTime.Now;
@@ -176,7 +174,7 @@ namespace Blog.Services
             _context.SaveChanges();
 
 
-            
+
         }
 
     }

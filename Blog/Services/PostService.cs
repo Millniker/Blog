@@ -25,15 +25,15 @@ namespace Blog.Services
             IQueryable<PostEntity> query = _context.Post.Include(one => one.Tags);
 
             foreach (var tag in tags)
-                {
+            {
 
                 query = query.Where(p => p.Tags
                     .Select(k => k.Id).
                     Contains(tag));
 
-                }
+            }
 
-            
+
             var tagsss = _context.Post.Include(p => p.Tags);
             if (min != null)
             {
@@ -72,7 +72,7 @@ namespace Blog.Services
             int totalPostsCount = query.Count();
             int pageCount = (int)Math.Ceiling(totalPostsCount / (decimal)size);
 
-            if (page > pageCount && pageCount!=0)
+            if (page > pageCount && pageCount != 0)
             {
                 throw new PageNotFoundException();
             }
@@ -83,7 +83,7 @@ namespace Blog.Services
                          select new PostDto
                          {
                              Id = post.Id,
-                             CreatedDate=post.Created,
+                             CreatedDate = post.Created,
                              Title = post.Title,
                              Description = post.Description,
                              ReadingTime = post.ReadingTime,
@@ -97,9 +97,9 @@ namespace Blog.Services
                              Tags = (from tag in post.Tags
                                      select new TagDto
                                      {
-                                         Id =tag.Id,
+                                         Id = tag.Id,
                                          Name = tag.Name,
-                                         CreatedDate=tag.CreatedDate
+                                         CreatedDate = tag.CreatedDate
 
                                      }).ToList(),
                          }).ToList(),
@@ -124,7 +124,7 @@ namespace Blog.Services
                 return false;
             }
         }
-        public PostFullDto GetConcertPost (Guid id)
+        public PostFullDto GetConcertPost(Guid id)
         {
 
             var post = _context.Post
@@ -155,17 +155,17 @@ namespace Blog.Services
                         select new TagDto
                         {
                             Id = tag.Id,
-                            CreatedDate=tag.CreatedDate,
+                            CreatedDate = tag.CreatedDate,
                             Name = tag.Name
-                         
+
 
                         }).ToList(),
                 comments = comments,
-               
-                
+
+
             };
         }
-        public List<CommentDto> GetCommentsList (Guid postId)
+        public List<CommentDto> GetCommentsList(Guid postId)
         {
             List<CommentsEntity> comments = _context.Comments.Where(c => c.PostId == postId).OrderBy(c => c.CreatedTime).ToList();
             List<CommentDto> commentDtos = new();
@@ -189,10 +189,10 @@ namespace Blog.Services
             return commentDtos;
 
         }
-       
+
         public void SetLike(Guid postId, string userId)
         {
-            
+
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
             if (post == null)
             {
@@ -200,7 +200,7 @@ namespace Blog.Services
             }
             var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
             author.Likes += 1;
-            
+
             var userLikedPost = HasLike(userId, postId);
             if (!userLikedPost)
             {
@@ -214,7 +214,7 @@ namespace Blog.Services
                 _context.Post.Entry(post).State = EntityState.Modified;
                 _context.UsersLikedPosts.AddAsync(usersLiked);
                 _context.SaveChangesAsync();
-               
+
             }
             else
             {
@@ -225,11 +225,11 @@ namespace Blog.Services
         public void DeleteLike(Guid postId, string userId)
         {
             var post = _context.Post.Where(p => p.Id == postId).FirstOrDefault();
-            
+
             if (post == null)
             {
-                    throw new PageNotFoundException();
-               
+                throw new PageNotFoundException();
+
             }
             var author = _context.UserEntity.Where(a => a.Id == post.AuthorId).FirstOrDefault();
             author.Likes -= 1;

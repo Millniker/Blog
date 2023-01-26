@@ -7,7 +7,7 @@ namespace Blog.Controllers
 {
     [Route("api/[controller]/")]
     [ApiController]
-    public class AuthorController : Controller    
+    public class AuthorController : Controller
     {
         private readonly IAuthorService _authorService;
         public AuthorController(IAuthorService authorService)
@@ -19,7 +19,8 @@ namespace Blog.Controllers
         [Route("list")]
         public ActionResult<List<AuthorDto>> GetList()
         {
-            try {
+            try
+            {
                 return _authorService.GetAuthorList();
             }
             catch (Exception ex)

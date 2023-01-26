@@ -31,7 +31,7 @@ namespace Blog.DTO
         public Int32 Likes { get; set; }
 
         [Required]
-        [DefaultValue (false)]
+        [DefaultValue(false)]
         public bool HasLike { get; set; }
         [Required, DefaultValue(0)]
         public Int32 CommentCount { get; set; }

@@ -4,7 +4,7 @@ using Blog.Services.Interfaces;
 
 namespace Blog.Services
 {
-    public class AuthorService: IAuthorService
+    public class AuthorService : IAuthorService
     {
         private readonly ApplicationDbContext _context;
         public AuthorService(ApplicationDbContext context)
@@ -24,7 +24,7 @@ namespace Blog.Services
                      Gender = author.Gender,
                      Posts = author.CreatedPosts,
                      Likes = author.Likes,
-                     Created= author.Created
+                     Created = author.Created
                  }).ToList();
             return authorList;
 

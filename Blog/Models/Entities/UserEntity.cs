@@ -1,7 +1,4 @@
 ﻿using Blog.Models.Enums;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Hosting;
-using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 

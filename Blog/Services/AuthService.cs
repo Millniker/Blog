@@ -1,21 +1,16 @@
-﻿using Azure.Core;
-using Blog.Exeption;
+﻿using Blog.Exeption;
 using Blog.Models;
 using Blog.Models.DTO;
 using Blog.Models.Entities;
 using Blog.Services.Interfaces;
-using IdentityModel;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.Net.Http.Headers;
 using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Text.RegularExpressions;
 
 namespace Blog.Services
 {
-    public class AuthService: IAuthService
+    public class AuthService : IAuthService
     {
         private readonly ApplicationDbContext _context;
         public AuthService(ApplicationDbContext context)
@@ -37,12 +32,12 @@ namespace Blog.Services
                 BirthDate = userRegisterModel.BirthDate,
                 PhoneNumber = userRegisterModel.PhoneNumber,
                 Gender = userRegisterModel.Gender,
-                Created= DateTime.UtcNow
+                Created = DateTime.UtcNow
 
-        };
+            };
 
-             _context.UserEntity.Add(userEntity);
-             _context.SaveChanges();
+            _context.UserEntity.Add(userEntity);
+            _context.SaveChanges();
 
             var loginCredentials = new LoginCredential
             {
@@ -50,13 +45,13 @@ namespace Blog.Services
                 email = userEntity.Email
             };
 
-            return  LoginUser(loginCredentials);
+            return LoginUser(loginCredentials);
         }
 
-        public  TokenResponse LoginUser(LoginCredential loginCredentials)
+        public TokenResponse LoginUser(LoginCredential loginCredentials)
         {
 
-            var identity =  GetIdentity(loginCredentials.email, loginCredentials.password);
+            var identity = GetIdentity(loginCredentials.email, loginCredentials.password);
 
             var now = DateTime.UtcNow;
 
@@ -81,9 +76,9 @@ namespace Blog.Services
             return result;
         }
 
-        private  ClaimsIdentity GetIdentity(string email, string password)
+        private ClaimsIdentity GetIdentity(string email, string password)
         {
-            var userEntity =  _context
+            var userEntity = _context
                 .UserEntity
                 .Where(x => x.Email == email && x.Password == password)
                 .FirstOrDefault();
@@ -108,7 +103,7 @@ namespace Blog.Services
 
             return claimsIdentity;
         }
-        public void  LogoutUser(string token)
+        public void LogoutUser(string token)
         {
             var handler = new JwtSecurityTokenHandler();
             var expiredDate = handler.ReadJwtToken(token).ValidTo;
@@ -120,8 +115,8 @@ namespace Blog.Services
                 ExpiredDate = expiredDate
             };
 
-             _context.Tokens.Add(tokenEntity);
-             _context.SaveChanges();
+            _context.Tokens.Add(tokenEntity);
+            _context.SaveChanges();
         }
 
     }

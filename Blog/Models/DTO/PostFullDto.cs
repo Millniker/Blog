@@ -1,6 +1,6 @@
 ﻿using Blog.Models.DTO;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blog.DTO
 {
@@ -25,7 +25,7 @@ namespace Blog.DTO
         public Guid authorId { get; set; }
         [Required]
         [MinLength(1)]
-        public string author{ get; set; }
+        public string author { get; set; }
 
         [Required]
         [DefaultValue(0)]

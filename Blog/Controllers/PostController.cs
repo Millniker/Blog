@@ -3,16 +3,11 @@ using Blog.DTO;
 using Blog.Exeption;
 using Blog.Models;
 using Blog.Models.DTO;
-using Blog.Models.Entities;
 using Blog.Models.Enums;
-using Blog.Services;
 using Blog.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Net.Http.Headers;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Blog.Controllers
 {
@@ -47,28 +42,30 @@ namespace Blog.Controllers
                 }
             }
 
-            try {
-                
+            try
+            {
+
                 return _postService.GetPosts(tags, author, min, max, sorting, page, size, User.Identity.Name);
 
             }
             catch (PageNotFoundException)
             {
-                return BadRequest( new Response
+                return BadRequest(new Response
                 {
-                    status ="400",
+                    status = "400",
                     message = "Invalid value for attribute page"
                 });
             }
             catch (Exception ex)
             {
-                return BadRequest(new Response{ 
-                    
-                    status ="Error",
+                return BadRequest(new Response
+                {
+
+                    status = "Error",
                     message = ex.Message,
                 });
             }
-            
+
         }
         [HttpGet]
         [Route("{id}")]
@@ -78,11 +75,11 @@ namespace Blog.Controllers
             {
                 return _postService.GetConcertPost(id);
             }
-            catch(PageNotFoundException)
+            catch (PageNotFoundException)
             {
                 return NotFound(new Response
                 {
-                    status="Error",
+                    status = "Error",
                     message = $"Post with id={id} not found in database"
                 });
             }
@@ -100,7 +97,7 @@ namespace Blog.Controllers
         [HttpPost]
         [Route("{postId:guid}/like")]
         [Authorize]
-        public IActionResult AddLike( Guid postId)
+        public IActionResult AddLike(Guid postId)
         {
             try
             {
@@ -114,9 +111,10 @@ namespace Blog.Controllers
             }
             catch (UserLikeExeption)
             {
-                return BadRequest(new Response{
-                    status= "Error",
-                    message= "Like on this post already set by user"
+                return BadRequest(new Response
+                {
+                    status = "Error",
+                    message = "Like on this post already set by user"
                 });
             }
             catch (PageNotFoundException)

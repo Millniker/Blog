@@ -1,8 +1,5 @@
-﻿using Blog.DTO;
-using Blog.Models.DTO;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel;
-using System.Resources;
 
 namespace Blog.Models.Entities
 {

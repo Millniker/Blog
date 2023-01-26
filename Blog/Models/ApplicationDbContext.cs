@@ -1,6 +1,5 @@
 ﻿using Blog.Models.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Hosting;
 
 namespace Blog.Models
 {
@@ -11,7 +10,7 @@ namespace Blog.Models
         public DbSet<CommentsEntity> Comments { get; set; }
         public DbSet<TagEntity> Tags { get; set; }
         public DbSet<TokenEntity> Tokens { get; set; }
-        public DbSet<UsersLikedPost> UsersLikedPosts {get; set; }
+        public DbSet<UsersLikedPost> UsersLikedPosts { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
             Database.EnsureCreated();
