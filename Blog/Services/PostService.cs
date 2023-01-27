@@ -212,8 +212,8 @@ namespace Blog.Services
                     PostId = postId,
                 };
                 _context.Post.Entry(post).State = EntityState.Modified;
-                _context.UsersLikedPosts.AddAsync(usersLiked);
-                _context.SaveChangesAsync();
+                _context.UsersLikedPosts.Add(usersLiked);
+                _context.SaveChanges();
 
             }
             else
@@ -240,7 +240,7 @@ namespace Blog.Services
                 UsersLikedPost usersLiked = _context.UsersLikedPosts.Where(x => x.UserId.ToString() == userId && x.PostId == postId).FirstOrDefault();
                 _context.Attach(post).State = EntityState.Modified;
                 _context.UsersLikedPosts.Remove(usersLiked);
-                _context.SaveChangesAsync();
+                _context.SaveChanges();
 
             }
             else

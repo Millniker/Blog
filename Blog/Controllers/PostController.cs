@@ -73,7 +73,7 @@ namespace Blog.Controllers
         {
             try
             {
-                return _postService.GetConcertPost(id);
+                return _postService.GetConcertPost(id, User.Identity.Name);
             }
             catch (PageNotFoundException)
             {
