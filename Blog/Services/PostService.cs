@@ -124,7 +124,7 @@ namespace Blog.Services
                 return false;
             }
         }
-        public PostFullDto GetConcertPost(Guid id)
+        public PostFullDto GetConcertPost(Guid id, string userId)
         {
 
             var post = _context.Post
@@ -148,7 +148,7 @@ namespace Blog.Services
                 authorId = post.AuthorId,
                 author = post.Author,
                 likes = post.Likes,
-                hasLike = post.HasLike,
+                hasLike = HasLike(userId, post.Id),
 
                 commentCount = post.CommentCount,
                 tags = (from tag in post.Tags
